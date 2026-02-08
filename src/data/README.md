@@ -31,8 +31,39 @@ else:
     print("Data validation failed:", validation['warnings'])
 ```
 
-### `event_loader.py` (To be implemented)
-Will contain the `EventDataLoader` class for loading and filtering event data.
+### `event_loader.py`
+Contains the `EventDataLoader` class for loading and filtering event data that may have impacted oil prices.
+
+**Key Features:**
+- Load event data from CSV files
+- Filter events by date range
+- Filter events by type (geopolitical, opec_decision, economic_shock, sanction)
+- Find events near a specific date with configurable time window
+- Get summary statistics about events
+
+**Usage Example:**
+```python
+from src.data import EventDataLoader
+
+# Load and filter events
+loader = EventDataLoader()
+events = loader.load_events('data/events.csv')
+
+# Get summary
+summary = loader.get_events_summary()
+print(f"Total events: {summary['total_events']}")
+print(f"Event types: {summary['by_type']}")
+
+# Filter by type
+opec_events = loader.filter_by_type('opec_decision')
+print(f"OPEC decisions: {len(opec_events)}")
+
+# Filter by date range
+crisis_events = loader.filter_by_date_range('2008-01-01', '2009-12-31')
+
+# Find events near a change point
+nearby = loader.find_events_near_date('2008-09-15', window_days=30)
+```
 
 ## Testing
 
