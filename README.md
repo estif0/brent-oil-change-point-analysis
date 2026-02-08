@@ -178,26 +178,30 @@ pytest tests/ -v
 ### 1. Load and Explore Data
 
 ```python
-from src.data import BrentDataLoader, EventDataLoader
+# Simple approach - use the convenience function
+from src.data import load_brent_data, EventDataLoader
 
-# Load Brent oil price data
+# Load Brent oil prices with automatic date parsing
+data = load_brent_data('data/raw/BrentOilPrices.csv')
+print(f"Loaded {len(data)} price observations")
+print(f"Date range: {data.index.min()} to {data.index.max()}")
+
+# Alternative: Use the full class for advanced features
+from src.data import BrentDataLoader
+
 loader = BrentDataLoader()
 data = loader.load_data('data/raw/BrentOilPrices.csv')
-print(f"Loaded {len(data)} price observations")
-
-# Validate data
-validation = loader.validate_data()
+validation = loader.validate_data()  # Returns detailed validation report
 if validation['is_valid']:
     print("✓ Data validation passed")
     
-# Load events
+# Load historical events
 event_loader = EventDataLoader()
 events = event_loader.load_events('data/events.csv')
 print(f"Loaded {len(events)} historical events")
 ```
 
 ### 2. Perform EDA and Stationarity Tests
-
 ```python
 from src.eda import TimeSeriesAnalyzer
 from src.statistical_tests import StationarityTester
@@ -341,6 +345,7 @@ Each module in `src/` can be used independently. See README files in each module
 - **[Project Overview](docs/project-overview.md)**: Business objectives and scope
 - **[Analysis Workflow](docs/analysis_workflow.md)**: Detailed step-by-step analysis guide (481 lines)
 - **[Assumptions & Limitations](docs/assumptions_and_limitations.md)**: Critical assumptions and methodological constraints (412 lines)
+- **[Model Outputs & Limitations](docs/public/model_outputs_and_limitations.md)**: Non-technical guide explaining expected results and limitations
 - **[Communication Channels](docs/communication_channels.md)**: Guide for presenting results to stakeholders
 - **[Steps](docs/steps.md)**: Task tracking and project milestones
 

@@ -203,3 +203,38 @@ class BrentDataLoader:
                 str(self.data.index.max().date()),
             ),
         }
+
+
+def load_brent_data(file_path: str) -> pd.DataFrame:
+    """
+    Convenience function to load Brent oil price data from CSV.
+
+    This is a simple wrapper around BrentDataLoader for quick data loading.
+    The function reads the CSV file, parses the Date column to datetime,
+    and returns a DataFrame with DatetimeIndex.
+
+    Args:
+        file_path (str): Path to the Brent oil prices CSV file.
+                        Expected columns: 'Date' and 'Price'
+
+    Returns:
+        pd.DataFrame: DataFrame with DatetimeIndex and 'Price' column.
+                     Index is sorted chronologically.
+
+    Raises:
+        FileNotFoundError: If the file does not exist.
+        ValueError: If required columns are missing.
+
+    Example:
+        >>> # Simple usage - load data directly
+        >>> from src.data import load_brent_data
+        >>> data = load_brent_data('data/raw/BrentOilPrices.csv')
+        >>> print(f"Loaded {len(data)} price observations")
+        >>> print(f"Date range: {data.index.min()} to {data.index.max()}")
+
+        >>> # Access price data
+        >>> prices = data['Price']
+        >>> print(f"Average price: ${prices.mean():.2f}")
+    """
+    loader = BrentDataLoader()
+    return loader.load_data(file_path)

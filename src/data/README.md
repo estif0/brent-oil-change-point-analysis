@@ -2,10 +2,50 @@
 
 This module handles data loading and validation for the Brent oil price analysis project.
 
+## Quick Start
+
+For simple data loading, use the convenience function:
+
+```python
+from src.data import load_brent_data
+
+# Load Brent oil prices with automatic date parsing
+data = load_brent_data('data/raw/BrentOilPrices.csv')
+print(f"Loaded {len(data)} observations")
+print(f"Date range: {data.index.min()} to {data.index.max()}")
+```
+
+For advanced features (validation, statistics), use the full classes documented below.
+
+---
+
 ## Files
 
 ### `loader.py`
-Contains the `BrentDataLoader` class for loading and validating Brent oil price data from CSV files.
+Contains the `BrentDataLoader` class and `load_brent_data()` convenience function for loading Brent oil price data from CSV files.
+
+#### Convenience Function: `load_brent_data(file_path)`
+
+**Purpose:** Simple, one-line data loading with automatic date parsing.
+
+**Parameters:**
+- `file_path` (str): Path to the Brent oil prices CSV file
+
+**Returns:**
+- `pd.DataFrame`: DataFrame with DatetimeIndex and 'Price' column
+
+**Example:**
+```python
+from src.data import load_brent_data
+
+# Quick loading
+data = load_brent_data('data/raw/BrentOilPrices.csv')
+prices = data['Price']
+```
+
+#### Class: `BrentDataLoader`
+
+**Purpose:** Full-featured data loading with validation and statistics.
 
 **Key Features:**
 - Load CSV files with date parsing

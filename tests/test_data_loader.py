@@ -9,7 +9,7 @@ from pathlib import Path
 import tempfile
 import os
 
-from src.data.loader import BrentDataLoader
+from src.data.loader import BrentDataLoader, load_brent_data
 
 
 class TestBrentDataLoader:
@@ -214,6 +214,77 @@ class TestBrentDataLoader:
 
             # Check data is sorted
             assert loaded_data.index.is_monotonic_increasing
+        finally:
+            os.unlink(temp_path)
+
+
+class TestLoadBrentDataFunction:
+    """Test cases for the load_brent_data convenience function."""
+
+    @pytest.fixture
+    def sample_csv_file(self):
+        """Create a temporary CSV file with sample data for testing."""
+        data = """Date,Price
+20-May-87,18.63
+21-May-87,18.45
+22-May-87,18.55
+25-May-87,18.6
+26-May-87,18.63"""
+
+        with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".csv") as f:
+            f.write(data)
+            temp_path = f.name
+
+        yield temp_path
+        os.unlink(temp_path)
+
+    def test_load_brent_data_returns_dataframe(self, sample_csv_file):
+        """Test that load_brent_data returns a DataFrame."""
+        data = load_brent_data(sample_csv_file)
+        assert isinstance(data, pd.DataFrame)
+
+    def test_load_brent_data_has_datetime_index(self, sample_csv_file):
+        """Test that returned DataFrame has DatetimeIndex."""
+        data = load_brent_data(sample_csv_file)
+        assert isinstance(data.index, pd.DatetimeIndex)
+        assert data.index.name == "Date"
+
+    def test_load_brent_data_parses_dates_correctly(self, sample_csv_file):
+        """Test that dates are parsed correctly to datetime."""
+        data = load_brent_data(sample_csv_file)
+
+        # First date should be 1987-05-20
+        assert data.index[0].year == 1987
+        assert data.index[0].month == 5
+        assert data.index[0].day == 20
+
+    def test_load_brent_data_has_price_column(self, sample_csv_file):
+        """Test that DataFrame has Price column."""
+        data = load_brent_data(sample_csv_file)
+        assert "Price" in data.columns
+
+    def test_load_brent_data_is_sorted(self, sample_csv_file):
+        """Test that data is sorted chronologically."""
+        data = load_brent_data(sample_csv_file)
+        assert data.index.is_monotonic_increasing
+
+    def test_load_brent_data_file_not_found(self):
+        """Test that FileNotFoundError is raised for non-existent file."""
+        with pytest.raises(FileNotFoundError):
+            load_brent_data("nonexistent_file.csv")
+
+    def test_load_brent_data_invalid_columns(self):
+        """Test that ValueError is raised for missing required columns."""
+        data = """WrongColumn1,WrongColumn2
+20-May-87,18.63"""
+
+        with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".csv") as f:
+            f.write(data)
+            temp_path = f.name
+
+        try:
+            with pytest.raises(ValueError, match="CSV must contain"):
+                load_brent_data(temp_path)
         finally:
             os.unlink(temp_path)
 
