@@ -219,7 +219,7 @@ __marimo__/
 # Project-specific ignores
 
 # Docs and related files
-/docs
+/docs/*.md
 copilot-instructions.md
 
 # Data files (keep directory structure, ignore actual data)
