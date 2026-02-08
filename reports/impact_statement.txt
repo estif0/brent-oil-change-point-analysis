@@ -1,0 +1,34 @@
+======================================================================
+CHANGE POINT ANALYSIS SUMMARY
+======================================================================
+
+📍 Change Point Detected: 2008-07-14
+   Index: 5378
+   94% Credible Interval: [2008-05-08, 2008-09-08]
+
+📊 Impact on Mean:
+   Before: 0.000344
+   After:  -0.000045
+   Change: -0.000389 (-113.12%)
+   Direction: DECREASE
+   Magnitude: NEGLIGIBLE
+
+📈 Impact on Volatility:
+   Before: 0.022404
+   After:  0.027202
+   Change: +0.004798 (+21.42%)
+   Volatility: INCREASE
+
+🌍 Associated Events:
+   Event: Oil Price Peak
+   Event Date: 2008-07-11
+   Distance: -3 days
+   Type: economic_shock
+   Expected Impact: increase
+
+💡 Interpretation:
+   Moderate negative shift detected in the time series.
+   Volatility increased, indicating higher market uncertainty.
+   Timing closely aligns with major event (within 3 days).
+
+======================================================================
