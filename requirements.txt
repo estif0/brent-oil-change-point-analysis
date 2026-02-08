@@ -1,0 +1,42 @@
+# Core Data Science
+numpy
+pandas
+scipy
+scikit-learn
+statsmodels
+
+# Bayesian Modeling
+pymc
+arviz
+
+# Visualization
+matplotlib
+seaborn
+plotly
+bokeh
+
+# Dashboard Backend
+flask
+flask-cors
+flask-restful
+
+# Utilities
+jupyter
+notebook
+ipywidgets
+tqdm
+python-dotenv
+pyyaml
+
+# Data Processing
+pandas-datareader
+yfinance
+
+# Testing
+pytest
+pytest-cov
+
+# Formatting and Linting
+black
+flake8
+isort
