@@ -1,0 +1,18 @@
+date,event_name,event_type,description,expected_impact
+1990-08-02,Iraq Invasion of Kuwait,geopolitical,"Iraq invaded Kuwait, triggering fears of oil supply disruption in the Middle East. Led to immediate price surge.",increase
+1991-01-17,Gulf War Begins,geopolitical,"Operation Desert Storm launched. Initial price spike followed by decline as fears of prolonged disruption eased.",increase
+1997-07-02,Asian Financial Crisis,economic_shock,"Financial crisis began in Thailand and spread across Asia, reducing oil demand significantly.",decrease
+1998-03-30,OPEC Production Increase,opec_decision,"OPEC increased production despite weak Asian demand, leading to oil price collapse to below $10/barrel.",decrease
+2001-09-11,September 11 Attacks,geopolitical,"Terrorist attacks on US led to economic uncertainty and temporary oil market disruption.",decrease
+2002-12-02,Venezuela Oil Strike,economic_shock,"National strike in Venezuela disrupted oil production in the world's fifth-largest oil exporter.",increase
+2003-03-20,Iraq War Begins,geopolitical,"US-led invasion of Iraq. Initial price spike due to supply concerns, followed by volatility.",increase
+2008-07-11,Oil Price Peak,economic_shock,"Brent crude reached record high of $147/barrel driven by demand growth and speculation before financial crisis.",increase
+2008-09-15,Global Financial Crisis,economic_shock,"Lehman Brothers collapse triggered global financial crisis, causing dramatic oil demand destruction and price collapse.",decrease
+2010-12-17,Arab Spring Begins,geopolitical,"Political uprisings across Middle East and North Africa disrupted oil production, particularly in Libya.",increase
+2011-03-11,Fukushima Nuclear Disaster,economic_shock,"Japan nuclear disaster increased global oil demand as Japan shifted from nuclear to fossil fuels.",increase
+2014-11-27,OPEC Maintains Production,opec_decision,"OPEC decided not to cut production despite falling prices, triggering oil price collapse from $100+ to below $30.",decrease
+2016-11-30,OPEC Production Cut Agreement,opec_decision,"OPEC agreed to first production cut in 8 years, joined by Russia (OPEC+), stabilizing oil markets.",increase
+2018-05-08,US Withdraws from Iran Deal,sanction,"US reimposed sanctions on Iran, removing ~1 million barrels/day from market.",increase
+2020-03-09,COVID-19 Pandemic and Price War,economic_shock,"COVID-19 lockdowns destroyed demand while Saudi Arabia and Russia engaged in price war. Prices briefly went negative.",decrease
+2020-04-12,OPEC+ Historic Production Cut,opec_decision,"OPEC+ agreed to largest production cut in history (9.7 million bpd) in response to pandemic demand collapse.",increase
+2022-02-24,Russia Invades Ukraine,geopolitical,"Russia's invasion of Ukraine and subsequent Western sanctions created major supply concerns and price surge.",increase
