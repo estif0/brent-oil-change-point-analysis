@@ -6,5 +6,6 @@ in time series data, specifically for Brent oil price analysis.
 """
 
 from .bayesian_changepoint import BayesianChangePointModel
+from .diagnostics import ModelDiagnostics
 
-__all__ = ["BayesianChangePointModel"]
+__all__ = ["BayesianChangePointModel", "ModelDiagnostics"]
