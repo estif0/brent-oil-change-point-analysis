@@ -15,6 +15,7 @@ This backend provides RESTful API endpoints for accessing:
 - **Framework:** Flask 3.0
 - **API:** Flask-RESTful
 - **CORS:** Flask-CORS
+- **Documentation:** Swagger UI (OpenAPI 3.0)
 - **Data Processing:** pandas, numpy
 - **Configuration:** python-dotenv
 
@@ -44,6 +45,26 @@ python app.py
 ```
 
 The API will be available at `http://localhost:5000`
+
+## API Documentation
+
+### Interactive Documentation (Swagger UI)
+
+Full interactive API documentation is available at:
+
+**http://localhost:5000/api/docs**
+
+The Swagger UI provides:
+- Complete endpoint documentation with request/response schemas
+- Try-it-out functionality to test endpoints directly
+- Example requests and responses
+- Data model schemas
+
+### OpenAPI Specification
+
+The OpenAPI 3.0 specification is available at:
+
+**http://localhost:5000/swagger.json**
 
 ## API Endpoints
 

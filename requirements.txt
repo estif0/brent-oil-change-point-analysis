@@ -19,6 +19,7 @@ bokeh
 flask
 flask-cors
 flask-restful
+flask-swagger-ui
 
 # Utilities
 jupyter

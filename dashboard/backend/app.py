@@ -8,6 +8,7 @@ and registers API routes.
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_restful import Api
+from flask_swagger_ui import get_swaggerui_blueprint
 from config import get_config
 import sys
 from pathlib import Path
@@ -64,6 +65,7 @@ def create_app(config_name=None):
                 "version": "1.0.0",
                 "endpoints": {
                     "health": "/health",
+                    "documentation": "/api/docs",
                     "api": {
                         "prices": f"{config.API_PREFIX}/prices",
                         "changepoints": f"{config.API_PREFIX}/changepoints",
@@ -72,6 +74,32 @@ def create_app(config_name=None):
                 },
             }
         )
+
+    # Swagger UI configuration
+    SWAGGER_URL = "/api/docs"
+    API_URL = "/swagger.json"
+
+    swaggerui_blueprint = get_swaggerui_blueprint(
+        SWAGGER_URL,
+        API_URL,
+        config={
+            "app_name": "Brent Oil Change Point Analysis API",
+            "docExpansion": "list",
+            "defaultModelsExpandDepth": 3,
+        },
+    )
+
+    app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+
+    # Serve swagger.json
+    @app.route("/swagger.json")
+    def swagger_spec():
+        """Serve the Swagger/OpenAPI specification."""
+        import json
+
+        swagger_path = Path(__file__).parent / "swagger.json"
+        with open(swagger_path, "r") as f:
+            return jsonify(json.load(f))
 
     # Error handlers
     @app.errorhandler(404)

@@ -1,0 +1,872 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Brent Oil Change Point Analysis API",
+		"version": "1.0.0",
+		"description": "REST API for accessing Brent oil price data, detected change points, and geopolitical/economic events that impact oil prices.",
+		"contact": {
+			"name": "Birhan Energies",
+			"email": "info@birhanenergies.com"
+		}
+	},
+	"servers": [
+		{
+			"url": "http://localhost:5000",
+			"description": "Development server"
+		}
+	],
+	"tags": [
+		{
+			"name": "Health",
+			"description": "Health check endpoints"
+		},
+		{
+			"name": "Prices",
+			"description": "Historical Brent oil price data"
+		},
+		{
+			"name": "Change Points",
+			"description": "Detected change points from Bayesian analysis"
+		},
+		{
+			"name": "Events",
+			"description": "Geopolitical and economic events"
+		}
+	],
+	"paths": {
+		"/health": {
+			"get": {
+				"tags": ["Health"],
+				"summary": "Health check",
+				"description": "Check if the API is running",
+				"responses": {
+					"200": {
+						"description": "API is healthy",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "healthy"
+										},
+										"service": {
+											"type": "string",
+											"example": "Brent Oil Change Point Analysis API"
+										},
+										"version": {
+											"type": "string",
+											"example": "1.0.0"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/prices": {
+			"get": {
+				"tags": ["Prices"],
+				"summary": "Get historical price data",
+				"description": "Retrieve historical Brent oil prices with optional date filtering",
+				"parameters": [
+					{
+						"name": "start_date",
+						"in": "query",
+						"description": "Start date in YYYY-MM-DD format",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date",
+							"example": "2020-01-01"
+						}
+					},
+					{
+						"name": "end_date",
+						"in": "query",
+						"description": "End date in YYYY-MM-DD format",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date",
+							"example": "2020-12-31"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"date": {
+														"type": "string",
+														"format": "date",
+														"example": "2020-01-02"
+													},
+													"price": {
+														"type": "number",
+														"format": "float",
+														"example": 68.91
+													}
+												}
+											}
+										},
+										"count": {
+											"type": "integer",
+											"example": 253
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/prices/statistics": {
+			"get": {
+				"tags": ["Prices"],
+				"summary": "Get price statistics",
+				"description": "Calculate summary statistics for prices in specified date range",
+				"parameters": [
+					{
+						"name": "start_date",
+						"in": "query",
+						"description": "Start date in YYYY-MM-DD format",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date",
+							"example": "2020-01-01"
+						}
+					},
+					{
+						"name": "end_date",
+						"in": "query",
+						"description": "End date in YYYY-MM-DD format",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date",
+							"example": "2020-12-31"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"statistics": {
+											"type": "object",
+											"properties": {
+												"mean": {
+													"type": "number",
+													"example": 43.21
+												},
+												"median": {
+													"type": "number",
+													"example": 41.84
+												},
+												"std": {
+													"type": "number",
+													"example": 11.45
+												},
+												"min": {
+													"type": "number",
+													"example": 19.33
+												},
+												"max": {
+													"type": "number",
+													"example": 68.91
+												},
+												"count": {
+													"type": "integer",
+													"example": 253
+												},
+												"start_date": {
+													"type": "string",
+													"format": "date",
+													"example": "2020-01-02"
+												},
+												"end_date": {
+													"type": "string",
+													"format": "date",
+													"example": "2020-12-30"
+												},
+												"percentile_25": {
+													"type": "number",
+													"example": 37.99
+												},
+												"percentile_75": {
+													"type": "number",
+													"example": 48.82
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "No data found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/prices/date-range": {
+			"get": {
+				"tags": ["Prices"],
+				"summary": "Get available date range",
+				"description": "Get the minimum and maximum dates available in the dataset",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"date_range": {
+											"type": "object",
+											"properties": {
+												"min_date": {
+													"type": "string",
+													"format": "date",
+													"example": "1987-05-20"
+												},
+												"max_date": {
+													"type": "string",
+													"format": "date",
+													"example": "2022-09-30"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/prices/info": {
+			"get": {
+				"tags": ["Prices"],
+				"summary": "Get dataset information",
+				"description": "Get information about the loaded price dataset",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"info": {
+											"type": "object",
+											"properties": {
+												"total_records": {
+													"type": "integer",
+													"example": 9154
+												},
+												"date_range": {
+													"type": "object",
+													"properties": {
+														"min_date": {
+															"type": "string",
+															"format": "date"
+														},
+														"max_date": {
+															"type": "string",
+															"format": "date"
+														}
+													}
+												},
+												"columns": {
+													"type": "array",
+													"items": {
+														"type": "string"
+													},
+													"example": ["Date", "Price"]
+												},
+												"missing_values": {
+													"type": "integer",
+													"example": 0
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/changepoints": {
+			"get": {
+				"tags": ["Change Points"],
+				"summary": "Get detected change points",
+				"description": "Retrieve list of detected change points with optional filtering",
+				"parameters": [
+					{
+						"name": "start_date",
+						"in": "query",
+						"description": "Filter from this date (YYYY-MM-DD)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date"
+						}
+					},
+					{
+						"name": "end_date",
+						"in": "query",
+						"description": "Filter to this date (YYYY-MM-DD)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date"
+						}
+					},
+					{
+						"name": "min_confidence",
+						"in": "query",
+						"description": "Minimum confidence threshold (0-1)",
+						"required": false,
+						"schema": {
+							"type": "number",
+							"format": "float",
+							"minimum": 0,
+							"maximum": 1,
+							"example": 0.8
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/ChangePoint"
+											}
+										},
+										"count": {
+											"type": "integer",
+											"example": 5
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/changepoints/{id}": {
+			"get": {
+				"tags": ["Change Points"],
+				"summary": "Get change point details",
+				"description": "Retrieve detailed information about a specific change point",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Change point ID",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"example": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"data": {
+											"$ref": "#/components/schemas/ChangePoint"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Change point not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/changepoints/stats": {
+			"get": {
+				"tags": ["Change Points"],
+				"summary": "Get change point statistics",
+				"description": "Get statistics about detected change points",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"statistics": {
+											"type": "object",
+											"properties": {
+												"total_count": {
+													"type": "integer",
+													"example": 8
+												},
+												"by_year": {
+													"type": "object",
+													"additionalProperties": {
+														"type": "integer"
+													},
+													"example": {
+														"2008": 2,
+														"2014": 1,
+														"2020": 2
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/events": {
+			"get": {
+				"tags": ["Events"],
+				"summary": "Get list of events",
+				"description": "Retrieve geopolitical and economic events with optional filtering",
+				"parameters": [
+					{
+						"name": "start_date",
+						"in": "query",
+						"description": "Filter from this date (YYYY-MM-DD)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date"
+						}
+					},
+					{
+						"name": "end_date",
+						"in": "query",
+						"description": "Filter to this date (YYYY-MM-DD)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date"
+						}
+					},
+					{
+						"name": "event_type",
+						"in": "query",
+						"description": "Filter by event type",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"geopolitical",
+								"opec_decision",
+								"economic_shock",
+								"sanction"
+							],
+							"example": "geopolitical"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Event"
+											}
+										},
+										"count": {
+											"type": "integer",
+											"example": 17
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/events/{id}": {
+			"get": {
+				"tags": ["Events"],
+				"summary": "Get event details",
+				"description": "Retrieve detailed information about a specific event",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Event ID",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"example": 0
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"data": {
+											"$ref": "#/components/schemas/Event"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Event not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/events/{id}/impact": {
+			"get": {
+				"tags": ["Events"],
+				"summary": "Get event impact analysis",
+				"description": "Calculate price impact around a specific event",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Event ID",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"example": 0
+						}
+					},
+					{
+						"name": "window_days",
+						"in": "query",
+						"description": "Days before/after event to analyze",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"default": 30,
+							"example": 30
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"impact": {
+											"$ref": "#/components/schemas/EventImpact"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Event not found or insufficient data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/events/types": {
+			"get": {
+				"tags": ["Events"],
+				"summary": "Get event types",
+				"description": "Get list of unique event types in the dataset",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"event_types": {
+											"type": "array",
+											"items": { "type": "string" },
+											"example": [
+												"geopolitical",
+												"opec_decision",
+												"economic_shock",
+												"sanction"
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/events/stats": {
+			"get": {
+				"tags": ["Events"],
+				"summary": "Get event statistics",
+				"description": "Get statistics about events grouped by type",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"statistics": {
+											"type": "object",
+											"properties": {
+												"total_count": {
+													"type": "integer",
+													"example": 17
+												},
+												"by_type": {
+													"type": "object",
+													"additionalProperties": {
+														"type": "integer"
+													},
+													"example": {
+														"geopolitical": 7,
+														"opec_decision": 5,
+														"economic_shock": 4,
+														"sanction": 1
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Error": {
+				"type": "object",
+				"properties": {
+					"success": { "type": "boolean", "example": false },
+					"error": { "type": "string", "example": "Error message" }
+				}
+			},
+			"ChangePoint": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "example": 1 },
+					"date": {
+						"type": "string",
+						"format": "date",
+						"example": "2008-07-03"
+					},
+					"mean_before": { "type": "number", "example": 95.84 },
+					"mean_after": { "type": "number", "example": 68.23 },
+					"std_before": { "type": "number", "example": 15.32 },
+					"std_after": { "type": "number", "example": 12.45 },
+					"price_change": { "type": "number", "example": -27.61 },
+					"percent_change": { "type": "number", "example": -28.8 },
+					"confidence": { "type": "number", "example": 0.95 },
+					"associated_event": {
+						"type": "string",
+						"example": "Global Financial Crisis"
+					}
+				}
+			},
+			"Event": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "example": 0 },
+					"date": {
+						"type": "string",
+						"format": "date",
+						"example": "1990-08-02"
+					},
+					"event_name": {
+						"type": "string",
+						"example": "Iraq Invasion of Kuwait"
+					},
+					"event_type": {
+						"type": "string",
+						"enum": [
+							"geopolitical",
+							"opec_decision",
+							"economic_shock",
+							"sanction"
+						],
+						"example": "geopolitical"
+					},
+					"description": {
+						"type": "string",
+						"example": "Iraq invaded Kuwait, triggering fears of oil supply disruption"
+					},
+					"expected_impact": {
+						"type": "string",
+						"enum": ["increase", "decrease", "neutral"],
+						"example": "increase"
+					}
+				}
+			},
+			"EventImpact": {
+				"type": "object",
+				"properties": {
+					"event_id": { "type": "integer", "example": 0 },
+					"event_name": { "type": "string", "example": "Gulf War" },
+					"event_date": {
+						"type": "string",
+						"format": "date",
+						"example": "1990-08-02"
+					},
+					"window_days": { "type": "integer", "example": 30 },
+					"mean_price_before": { "type": "number", "example": 17.25 },
+					"mean_price_after": { "type": "number", "example": 32.84 },
+					"price_change": { "type": "number", "example": 15.59 },
+					"price_change_pct": { "type": "number", "example": 90.38 },
+					"volatility_before": { "type": "number", "example": 0.87 },
+					"volatility_after": { "type": "number", "example": 3.45 }
+				}
+			}
+		}
+	}
+}
