@@ -1,0 +1,1560 @@
+==========================================
+BRENT OIL API ENDPOINT TESTING
+==========================================
+
+=== HEALTH CHECK ENDPOINTS ===
+[1;33mTesting:[0m Health Check
+Endpoint: /health
+[0;32m✓ Status: 200[0m
+{
+  "service": "Brent Oil Change Point Analysis API",
+  "status": "healthy",
+  "version": "1.0.0"
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m API Root Info
+Endpoint: /
+[0;32m✓ Status: 200[0m
+{
+  "endpoints": {
+    "api": {
+      "changepoints": "/api/changepoints",
+      "events": "/api/events",
+      "prices": "/api/prices"
+    },
+    "documentation": "/api/docs",
+    "health": "/health"
+  },
+  "message": "Brent Oil Change Point Analysis API",
+  "version": "1.0.0"
+}
+
+------------------------------------------
+
+=== PRICE DATA ENDPOINTS ===
+[1;33mTesting:[0m Get Available Date Range
+Endpoint: /api/prices/date-range
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "date_range": {
+    "min_date": "1987-05-20",
+    "max_date": "2022-11-14"
+  }
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Dataset Info
+Endpoint: /api/prices/info
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "info": {
+    "total_records": 9011,
+    "date_range": {
+      "min_date": "1987-05-20",
+      "max_date": "2022-11-14"
+    },
+    "columns": [
+      "Date",
+      "Price"
+    ],
+    "missing_values": 0
+  }
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Prices (Jan 2020)
+Endpoint: /api/prices?start_date=2020-01-01&end_date=2020-01-31
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "data": [
+    {
+      "date": "2020-01-01",
+      "price": 67.77
+    },
+    {
+      "date": "2020-01-02",
+      "price": 67.05
+    },
+    {
+      "date": "2020-01-03",
+      "price": 69.08
+    },
+    {
+      "date": "2020-01-06",
+      "price": 70.25
+    },
+    {
+      "date": "2020-01-07",
+      "price": 68.74
+    },
+    {
+      "date": "2020-01-08",
+      "price": 67.31
+    },
+    {
+      "date": "2020-01-09",
+      "price": 66.58
+    },
+    {
+      "date": "2020-01-10",
+      "price": 66.77
+    },
+    {
+      "date": "2020-01-13",
+      "price": 64.14
+    },
+    {
+      "date": "2020-01-14",
+      "price": 64.45
+    },
+    {
+      "date": "2020-01-15",
+      "price": 63.29
+    },
+    {
+      "date": "2020-01-16",
+      "price": 64.63
+    },
+    {
+      "date": "2020-01-17",
+      "price": 64.05
+    },
+    {
+      "date": "2020-01-20",
+      "price": 64.63
+    },
+    {
+      "date": "2020-01-21",
+      "price": 63.66
+    },
+    {
+      "date": "2020-01-22",
+      "price": 62.11
+    },
+    {
+      "date": "2020-01-23",
+      "price": 61.26
+    },
+    {
+      "date": "2020-01-24",
+      "price": 59.34
+    },
+    {
+      "date": "2020-01-27",
+      "price": 58.54
+    },
+    {
+      "date": "2020-01-28",
+      "price": 59.37
+    },
+    {
+      "date": "2020-01-29",
+      "price": 59.46
+    },
+    {
+      "date": "2020-01-30",
+      "price": 57.72
+    },
+    {
+      "date": "2020-01-31",
+      "price": 57.77
+    }
+  ],
+  "count": 23
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Price Statistics (2020)
+Endpoint: /api/prices/statistics?start_date=2020-01-01&end_date=2020-12-31
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "statistics": {
+    "mean": 42.101015625,
+    "median": 42.425,
+    "std": 12.029935167777563,
+    "min": 9.12,
+    "max": 70.25,
+    "count": 256,
+    "start_date": "2020-01-01",
+    "end_date": "2020-12-31",
+    "percentile_25": 37.995,
+    "percentile_75": 48.8175
+  }
+}
+
+------------------------------------------
+
+=== CHANGE POINT ENDPOINTS ===
+[1;33mTesting:[0m Get All Change Points
+Endpoint: /api/changepoints
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "date": "2008-07-14",
+      "mean_before": 0.000344,
+      "mean_after": -4.5e-05,
+      "std_before": 0.022404,
+      "std_after": 0.027202,
+      "price_change": -0.000389,
+      "percent_change": -113.12,
+      "confidence": 0.94,
+      "associated_event": "Oil Price Peak (2008-07-11)"
+    }
+  ],
+  "count": 1
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Change Point #1
+Endpoint: /api/changepoints/1
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "data": {
+    "changepoint_id": "1",
+    "date": "2008-07-14",
+    "mean_before": 0.000344,
+    "mean_after": -4.5e-05,
+    "std_before": 0.022404,
+    "std_after": 0.027202,
+    "price_change": -0.000389,
+    "percent_change": -113.12,
+    "confidence": 0.94,
+    "associated_event": "Oil Price Peak (2008-07-11)"
+  }
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Change Point Statistics
+Endpoint: /api/changepoints/stats
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "statistics": {
+    "total_count": 1,
+    "by_year": {
+      "2008": 1
+    }
+  }
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get High-Confidence Change Points
+Endpoint: /api/changepoints?min_confidence=0.9
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "date": "2008-07-14",
+      "mean_before": 0.000344,
+      "mean_after": -4.5e-05,
+      "std_before": 0.022404,
+      "std_after": 0.027202,
+      "price_change": -0.000389,
+      "percent_change": -113.12,
+      "confidence": 0.94,
+      "associated_event": "Oil Price Peak (2008-07-11)"
+    }
+  ],
+  "count": 1
+}
+
+------------------------------------------
+
+=== EVENT ENDPOINTS ===
+[1;33mTesting:[0m Get All Events
+Endpoint: /api/events
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "data": [
+    {
+      "id": 0,
+      "date": "1990-08-02",
+      "event_name": "Iraq Invasion of Kuwait",
+      "event_type": "geopolitical",
+      "description": "Iraq invaded Kuwait, triggering fears of oil supply disruption in the Middle East. Led to immediate price surge.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 1,
+      "date": "1991-01-17",
+      "event_name": "Gulf War Begins",
+      "event_type": "geopolitical",
+      "description": "Operation Desert Storm launched. Initial price spike followed by decline as fears of prolonged disruption eased.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 2,
+      "date": "1997-07-02",
+      "event_name": "Asian Financial Crisis",
+      "event_type": "economic_shock",
+      "description": "Financial crisis began in Thailand and spread across Asia, reducing oil demand significantly.",
+      "expected_impact": "decrease"
+    },
+    {
+      "id": 3,
+      "date": "1998-03-30",
+      "event_name": "OPEC Production Increase",
+      "event_type": "opec_decision",
+      "description": "OPEC increased production despite weak Asian demand, leading to oil price collapse to below $10/barrel.",
+      "expected_impact": "decrease"
+    },
+    {
+      "id": 4,
+      "date": "2001-09-11",
+      "event_name": "September 11 Attacks",
+      "event_type": "geopolitical",
+      "description": "Terrorist attacks on US led to economic uncertainty and temporary oil market disruption.",
+      "expected_impact": "decrease"
+    },
+    {
+      "id": 5,
+      "date": "2002-12-02",
+      "event_name": "Venezuela Oil Strike",
+      "event_type": "economic_shock",
+      "description": "National strike in Venezuela disrupted oil production in the world's fifth-largest oil exporter.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 6,
+      "date": "2003-03-20",
+      "event_name": "Iraq War Begins",
+      "event_type": "geopolitical",
+      "description": "US-led invasion of Iraq. Initial price spike due to supply concerns, followed by volatility.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 7,
+      "date": "2008-07-11",
+      "event_name": "Oil Price Peak",
+      "event_type": "economic_shock",
+      "description": "Brent crude reached record high of $147/barrel driven by demand growth and speculation before financial crisis.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 8,
+      "date": "2008-09-15",
+      "event_name": "Global Financial Crisis",
+      "event_type": "economic_shock",
+      "description": "Lehman Brothers collapse triggered global financial crisis, causing dramatic oil demand destruction and price collapse.",
+      "expected_impact": "decrease"
+    },
+    {
+      "id": 9,
+      "date": "2010-12-17",
+      "event_name": "Arab Spring Begins",
+      "event_type": "geopolitical",
+      "description": "Political uprisings across Middle East and North Africa disrupted oil production, particularly in Libya.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 10,
+      "date": "2011-03-11",
+      "event_name": "Fukushima Nuclear Disaster",
+      "event_type": "economic_shock",
+      "description": "Japan nuclear disaster increased global oil demand as Japan shifted from nuclear to fossil fuels.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 11,
+      "date": "2014-11-27",
+      "event_name": "OPEC Maintains Production",
+      "event_type": "opec_decision",
+      "description": "OPEC decided not to cut production despite falling prices, triggering oil price collapse from $100+ to below $30.",
+      "expected_impact": "decrease"
+    },
+    {
+      "id": 12,
+      "date": "2016-11-30",
+      "event_name": "OPEC Production Cut Agreement",
+      "event_type": "opec_decision",
+      "description": "OPEC agreed to first production cut in 8 years, joined by Russia (OPEC+), stabilizing oil markets.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 13,
+      "date": "2018-05-08",
+      "event_name": "US Withdraws from Iran Deal",
+      "event_type": "sanction",
+      "description": "US reimposed sanctions on Iran, removing ~1 million barrels/day from market.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 14,
+      "date": "2020-03-09",
+      "event_name": "COVID-19 Pandemic and Price War",
+      "event_type": "economic_shock",
+      "description": "COVID-19 lockdowns destroyed demand while Saudi Arabia and Russia engaged in price war. Prices briefly went negative.",
+      "expected_impact": "decrease"
+    },
+    {
+      "id": 15,
+      "date": "2020-04-12",
+      "event_name": "OPEC+ Historic Production Cut",
+      "event_type": "opec_decision",
+      "description": "OPEC+ agreed to largest production cut in history (9.7 million bpd) in response to pandemic demand collapse.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 16,
+      "date": "2022-02-24",
+      "event_name": "Russia Invades Ukraine",
+      "event_type": "geopolitical",
+      "description": "Russia's invasion of Ukraine and subsequent Western sanctions created major supply concerns and price surge.",
+      "expected_impact": "increase"
+    }
+  ],
+  "count": 17
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Event #0 (Gulf War)
+Endpoint: /api/events/0
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "data": {
+    "id": 0,
+    "date": "1990-08-02",
+    "event_name": "Iraq Invasion of Kuwait",
+    "event_type": "geopolitical",
+    "description": "Iraq invaded Kuwait, triggering fears of oil supply disruption in the Middle East. Led to immediate price surge.",
+    "expected_impact": "increase"
+  }
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Event #8 (Financial Crisis)
+Endpoint: /api/events/8
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "data": {
+    "id": 8,
+    "date": "2008-09-15",
+    "event_name": "Global Financial Crisis",
+    "event_type": "economic_shock",
+    "description": "Lehman Brothers collapse triggered global financial crisis, causing dramatic oil demand destruction and price collapse.",
+    "expected_impact": "decrease"
+  }
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Event Types
+Endpoint: /api/events/types
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "event_types": [
+    "geopolitical",
+    "economic_shock",
+    "opec_decision",
+    "sanction"
+  ]
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Event Statistics
+Endpoint: /api/events/stats
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "statistics": {
+    "total_count": 17,
+    "by_type": {
+      "geopolitical": 6,
+      "economic_shock": 6,
+      "opec_decision": 4,
+      "sanction": 1
+    }
+  }
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Geopolitical Events
+Endpoint: /api/events?event_type=geopolitical
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "data": [
+    {
+      "id": 0,
+      "date": "1990-08-02",
+      "event_name": "Iraq Invasion of Kuwait",
+      "event_type": "geopolitical",
+      "description": "Iraq invaded Kuwait, triggering fears of oil supply disruption in the Middle East. Led to immediate price surge.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 1,
+      "date": "1991-01-17",
+      "event_name": "Gulf War Begins",
+      "event_type": "geopolitical",
+      "description": "Operation Desert Storm launched. Initial price spike followed by decline as fears of prolonged disruption eased.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 4,
+      "date": "2001-09-11",
+      "event_name": "September 11 Attacks",
+      "event_type": "geopolitical",
+      "description": "Terrorist attacks on US led to economic uncertainty and temporary oil market disruption.",
+      "expected_impact": "decrease"
+    },
+    {
+      "id": 6,
+      "date": "2003-03-20",
+      "event_name": "Iraq War Begins",
+      "event_type": "geopolitical",
+      "description": "US-led invasion of Iraq. Initial price spike due to supply concerns, followed by volatility.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 9,
+      "date": "2010-12-17",
+      "event_name": "Arab Spring Begins",
+      "event_type": "geopolitical",
+      "description": "Political uprisings across Middle East and North Africa disrupted oil production, particularly in Libya.",
+      "expected_impact": "increase"
+    },
+    {
+      "id": 16,
+      "date": "2022-02-24",
+      "event_name": "Russia Invades Ukraine",
+      "event_type": "geopolitical",
+      "description": "Russia's invasion of Ukraine and subsequent Western sanctions created major supply concerns and price surge.",
+      "expected_impact": "increase"
+    }
+  ],
+  "count": 6
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Get Event #0 Impact
+Endpoint: /api/events/0/impact?window_days=30
+[0;32m✓ Status: 200[0m
+{
+  "success": true,
+  "impact": {
+    "event_id": 0,
+    "event_name": "Iraq Invasion of Kuwait",
+    "event_date": "1990-08-02",
+    "window_days": 30,
+    "mean_price_before": 17.375000000000004,
+    "mean_price_after": 27.746190476190474,
+    "price_change": 10.37119047619047,
+    "price_change_pct": 59.69030489893795,
+    "volatility_before": 1.6238512423072675,
+    "volatility_after": 1.9557005808417514
+  }
+}
+
+------------------------------------------
+
+=== DOCUMENTATION ENDPOINTS ===
+[1;33mTesting:[0m OpenAPI Specification
+Endpoint: /swagger.json
+[0;32m✓ Status: 200[0m
+{
+  "components": {
+    "schemas": {
+      "ChangePoint": {
+        "properties": {
+          "associated_event": {
+            "example": "Global Financial Crisis",
+            "type": "string"
+          },
+          "confidence": {
+            "example": 0.95,
+            "type": "number"
+          },
+          "date": {
+            "example": "2008-07-03",
+            "format": "date",
+            "type": "string"
+          },
+          "id": {
+            "example": 1,
+            "type": "integer"
+          },
+          "mean_after": {
+            "example": 68.23,
+            "type": "number"
+          },
+          "mean_before": {
+            "example": 95.84,
+            "type": "number"
+          },
+          "percent_change": {
+            "example": -28.8,
+            "type": "number"
+          },
+          "price_change": {
+            "example": -27.61,
+            "type": "number"
+          },
+          "std_after": {
+            "example": 12.45,
+            "type": "number"
+          },
+          "std_before": {
+            "example": 15.32,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "Error": {
+        "properties": {
+          "error": {
+            "example": "Error message",
+            "type": "string"
+          },
+          "success": {
+            "example": false,
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "Event": {
+        "properties": {
+          "date": {
+            "example": "1990-08-02",
+            "format": "date",
+            "type": "string"
+          },
+          "description": {
+            "example": "Iraq invaded Kuwait, triggering fears of oil supply disruption",
+            "type": "string"
+          },
+          "event_name": {
+            "example": "Iraq Invasion of Kuwait",
+            "type": "string"
+          },
+          "event_type": {
+            "enum": [
+              "geopolitical",
+              "opec_decision",
+              "economic_shock",
+              "sanction"
+            ],
+            "example": "geopolitical",
+            "type": "string"
+          },
+          "expected_impact": {
+            "enum": [
+              "increase",
+              "decrease",
+              "neutral"
+            ],
+            "example": "increase",
+            "type": "string"
+          },
+          "id": {
+            "example": 0,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "EventImpact": {
+        "properties": {
+          "event_date": {
+            "example": "1990-08-02",
+            "format": "date",
+            "type": "string"
+          },
+          "event_id": {
+            "example": 0,
+            "type": "integer"
+          },
+          "event_name": {
+            "example": "Gulf War",
+            "type": "string"
+          },
+          "mean_price_after": {
+            "example": 32.84,
+            "type": "number"
+          },
+          "mean_price_before": {
+            "example": 17.25,
+            "type": "number"
+          },
+          "price_change": {
+            "example": 15.59,
+            "type": "number"
+          },
+          "price_change_pct": {
+            "example": 90.38,
+            "type": "number"
+          },
+          "volatility_after": {
+            "example": 3.45,
+            "type": "number"
+          },
+          "volatility_before": {
+            "example": 0.87,
+            "type": "number"
+          },
+          "window_days": {
+            "example": 30,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "email": "info@birhanenergies.com",
+      "name": "Birhan Energies"
+    },
+    "description": "REST API for accessing Brent oil price data, detected change points, and geopolitical/economic events that impact oil prices.",
+    "title": "Brent Oil Change Point Analysis API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/changepoints": {
+      "get": {
+        "description": "Retrieve list of detected change points with optional filtering",
+        "parameters": [
+          {
+            "description": "Filter from this date (YYYY-MM-DD)",
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filter to this date (YYYY-MM-DD)",
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Minimum confidence threshold (0-1)",
+            "in": "query",
+            "name": "min_confidence",
+            "required": false,
+            "schema": {
+              "example": 0.8,
+              "format": "float",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "count": {
+                      "example": 5,
+                      "type": "integer"
+                    },
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ChangePoint"
+                      },
+                      "type": "array"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Get detected change points",
+        "tags": [
+          "Change Points"
+        ]
+      }
+    },
+    "/api/changepoints/stats": {
+      "get": {
+        "description": "Get statistics about detected change points",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statistics": {
+                      "properties": {
+                        "by_year": {
+                          "additionalProperties": {
+                            "type": "integer"
+                          },
+                          "example": {
+                            "2008": 2,
+                            "2014": 1,
+                            "2020": 2
+                          },
+                          "type": "object"
+                        },
+                        "total_count": {
+                          "example": 8,
+                          "type": "integer"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Get change point statistics",
+        "tags": [
+          "Change Points"
+        ]
+      }
+    },
+    "/api/changepoints/{id}": {
+      "get": {
+        "description": "Retrieve detailed information about a specific change point",
+        "parameters": [
+          {
+            "description": "Change point ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ChangePoint"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Change point not found"
+          }
+        },
+        "summary": "Get change point details",
+        "tags": [
+          "Change Points"
+        ]
+      }
+    },
+    "/api/events": {
+      "get": {
+        "description": "Retrieve geopolitical and economic events with optional filtering",
+        "parameters": [
+          {
+            "description": "Filter from this date (YYYY-MM-DD)",
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filter to this date (YYYY-MM-DD)",
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filter by event type",
+            "in": "query",
+            "name": "event_type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "geopolitical",
+                "opec_decision",
+                "economic_shock",
+                "sanction"
+              ],
+              "example": "geopolitical",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "count": {
+                      "example": 17,
+                      "type": "integer"
+                    },
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      },
+                      "type": "array"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Get list of events",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/events/stats": {
+      "get": {
+        "description": "Get statistics about events grouped by type",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statistics": {
+                      "properties": {
+                        "by_type": {
+                          "additionalProperties": {
+                            "type": "integer"
+                          },
+                          "example": {
+                            "economic_shock": 4,
+                            "geopolitical": 7,
+                            "opec_decision": 5,
+                            "sanction": 1
+                          },
+                          "type": "object"
+                        },
+                        "total_count": {
+                          "example": 17,
+                          "type": "integer"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Get event statistics",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/events/types": {
+      "get": {
+        "description": "Get list of unique event types in the dataset",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "event_types": {
+                      "example": [
+                        "geopolitical",
+                        "opec_decision",
+                        "economic_shock",
+                        "sanction"
+                      ],
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Get event types",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/events/{id}": {
+      "get": {
+        "description": "Retrieve detailed information about a specific event",
+        "parameters": [
+          {
+            "description": "Event ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "example": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Event"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Event not found"
+          }
+        },
+        "summary": "Get event details",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/events/{id}/impact": {
+      "get": {
+        "description": "Calculate price impact around a specific event",
+        "parameters": [
+          {
+            "description": "Event ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "example": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Days before/after event to analyze",
+            "in": "query",
+            "name": "window_days",
+            "required": false,
+            "schema": {
+              "default": 30,
+              "example": 30,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "impact": {
+                      "$ref": "#/components/schemas/EventImpact"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Event not found or insufficient data"
+          }
+        },
+        "summary": "Get event impact analysis",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/prices": {
+      "get": {
+        "description": "Retrieve historical Brent oil prices with optional date filtering",
+        "parameters": [
+          {
+            "description": "Start date in YYYY-MM-DD format",
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "example": "2020-01-01",
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "End date in YYYY-MM-DD format",
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "example": "2020-12-31",
+              "format": "date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "count": {
+                      "example": 253,
+                      "type": "integer"
+                    },
+                    "data": {
+                      "items": {
+                        "properties": {
+                          "date": {
+                            "example": "2020-01-02",
+                            "format": "date",
+                            "type": "string"
+                          },
+                          "price": {
+                            "example": 68.91,
+                            "format": "float",
+                            "type": "number"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "summary": "Get historical price data",
+        "tags": [
+          "Prices"
+        ]
+      }
+    },
+    "/api/prices/date-range": {
+      "get": {
+        "description": "Get the minimum and maximum dates available in the dataset",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "date_range": {
+                      "properties": {
+                        "max_date": {
+                          "example": "2022-09-30",
+                          "format": "date",
+                          "type": "string"
+                        },
+                        "min_date": {
+                          "example": "1987-05-20",
+                          "format": "date",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Get available date range",
+        "tags": [
+          "Prices"
+        ]
+      }
+    },
+    "/api/prices/info": {
+      "get": {
+        "description": "Get information about the loaded price dataset",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "info": {
+                      "properties": {
+                        "columns": {
+                          "example": [
+                            "Date",
+                            "Price"
+                          ],
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "date_range": {
+                          "properties": {
+                            "max_date": {
+                              "format": "date",
+                              "type": "string"
+                            },
+                            "min_date": {
+                              "format": "date",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "missing_values": {
+                          "example": 0,
+                          "type": "integer"
+                        },
+                        "total_records": {
+                          "example": 9154,
+                          "type": "integer"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Get dataset information",
+        "tags": [
+          "Prices"
+        ]
+      }
+    },
+    "/api/prices/statistics": {
+      "get": {
+        "description": "Calculate summary statistics for prices in specified date range",
+        "parameters": [
+          {
+            "description": "Start date in YYYY-MM-DD format",
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "example": "2020-01-01",
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "End date in YYYY-MM-DD format",
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "example": "2020-12-31",
+              "format": "date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "statistics": {
+                      "properties": {
+                        "count": {
+                          "example": 253,
+                          "type": "integer"
+                        },
+                        "end_date": {
+                          "example": "2020-12-30",
+                          "format": "date",
+                          "type": "string"
+                        },
+                        "max": {
+                          "example": 68.91,
+                          "type": "number"
+                        },
+                        "mean": {
+                          "example": 43.21,
+                          "type": "number"
+                        },
+                        "median": {
+                          "example": 41.84,
+                          "type": "number"
+                        },
+                        "min": {
+                          "example": 19.33,
+                          "type": "number"
+                        },
+                        "percentile_25": {
+                          "example": 37.99,
+                          "type": "number"
+                        },
+                        "percentile_75": {
+                          "example": 48.82,
+                          "type": "number"
+                        },
+                        "start_date": {
+                          "example": "2020-01-02",
+                          "format": "date",
+                          "type": "string"
+                        },
+                        "std": {
+                          "example": 11.45,
+                          "type": "number"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "success": {
+                      "example": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "No data found"
+          }
+        },
+        "summary": "Get price statistics",
+        "tags": [
+          "Prices"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Check if the API is running",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "service": {
+                      "example": "Brent Oil Change Point Analysis API",
+                      "type": "string"
+                    },
+                    "status": {
+                      "example": "healthy",
+                      "type": "string"
+                    },
+                    "version": {
+                      "example": "1.0.0",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "API is healthy"
+          }
+        },
+        "summary": "Health check",
+        "tags": [
+          "Health"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "Development server",
+      "url": "http://localhost:5000"
+    }
+  ],
+  "tags": [
+    {
+      "description": "Health check endpoints",
+      "name": "Health"
+    },
+    {
+      "description": "Historical Brent oil price data",
+      "name": "Prices"
+    },
+    {
+      "description": "Detected change points from Bayesian analysis",
+      "name": "Change Points"
+    },
+    {
+      "description": "Geopolitical and economic events",
+      "name": "Events"
+    }
+  ]
+}
+
+------------------------------------------
+
+[1;33mTesting:[0m Swagger UI
+Endpoint: /api/docs/
+[0;32m✓ Status: 200 (Swagger UI loads successfully)[0m
+
+------------------------------------------
+
+==========================================
+TESTING COMPLETE
+==========================================

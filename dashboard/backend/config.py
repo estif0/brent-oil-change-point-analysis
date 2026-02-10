@@ -40,7 +40,7 @@ class Config:
     # Specific data files
     BRENT_PRICES_FILE = DATA_DIR / "raw" / "BrentOilPrices.csv"
     EVENTS_FILE = DATA_DIR / "events.csv"
-    CHANGEPOINT_SUMMARY_FILE = REPORTS_DIR / "changepoint_summary.csv"
+    CHANGEPOINT_SUMMARY_FILE = REPORTS_DIR / "changepoints_processed.csv"
     IMPACT_STATEMENT_FILE = REPORTS_DIR / "impact_statement.txt"
 
     # API settings
