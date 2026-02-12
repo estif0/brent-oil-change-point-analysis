@@ -4,11 +4,22 @@
  * Brent Oil Change Point Analysis Dashboard
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Activity, TrendingUp, Calendar, AlertTriangle } from "lucide-react";
-import { LoadingSpinner, ErrorDisplay, Card, ToggleSwitch } from "./components/ui";
+import {
+	LoadingSpinner,
+	ErrorDisplay,
+	Card,
+	ToggleSwitch,
+} from "./components/ui";
 import { PriceChart } from "./components/charts";
-import { useChangePoints, useEvents, useDateRange, usePrices } from "./hooks/useData";
+import { DateRangePicker, FilterDropdown } from "./components/common";
+import {
+	useChangePoints,
+	useEvents,
+	useDateRange,
+	usePrices,
+} from "./hooks/useData";
 import { checkHealth } from "./lib/api-client";
 
 function App() {
@@ -16,6 +27,11 @@ function App() {
 	const [showChangePoints, setShowChangePoints] = useState(true);
 	const [showEvents, setShowEvents] = useState(true);
 	const [showAllEvents, setShowAllEvents] = useState(false);
+
+	// Filter states
+	const [startDate, setStartDate] = useState<string>("");
+	const [endDate, setEndDate] = useState<string>("");
+	const [selectedEventTypes, setSelectedEventTypes] = useState<string[]>([]);
 
 	// Fetch data using custom hooks
 	const {
@@ -37,12 +53,51 @@ function App() {
 		data: prices,
 		loading: pricesLoading,
 		error: pricesError,
-	} = usePrices();
+	} = usePrices(startDate || undefined, endDate || undefined);
+
+	// Initialize date range filters
+	useEffect(() => {
+		if (dateRange && !startDate && !endDate) {
+			setStartDate(dateRange.min_date);
+			setEndDate(dateRange.max_date);
+		}
+	}, [dateRange, startDate, endDate]);
 
 	// Check API health on mount
 	useEffect(() => {
 		checkHealth().then(setApiHealthy);
 	}, []);
+
+	// Get unique event types
+	const eventTypes = useMemo(() => {
+		if (!events) return [];
+		const types = new Set(events.map((e) => e.event_type));
+		return Array.from(types);
+	}, [events]);
+
+	// Filter events by selected types
+	const filteredEvents = useMemo(() => {
+		if (!events) return [];
+		if (selectedEventTypes.length === 0) return events;
+		return events.filter((e) => selectedEventTypes.includes(e.event_type));
+	}, [events, selectedEventTypes]);
+
+	// Filter events by date range
+	const dateFilteredEvents = useMemo(() => {
+		if (!filteredEvents || !startDate || !endDate) return filteredEvents;
+		return filteredEvents.filter(
+			(e) => e.date >= startDate && e.date <= endDate,
+		);
+	}, [filteredEvents, startDate, endDate]);
+
+	// Handle event type toggle
+	const handleEventTypeToggle = (type: string) => {
+		setSelectedEventTypes((prev) =>
+			prev.includes(type)
+				? prev.filter((t) => t !== type)
+				: [...prev, type],
+		);
+	};
 
 	return (
 		<div className="bg-gray-50 min-h-screen">
@@ -195,6 +250,62 @@ function App() {
 					</Card>
 				</div>
 
+				{/* Filters Section */}
+				<Card
+					title="Filters & Controls"
+					className="bg-linear-to-br from-white to-gray-50 mb-8"
+				>
+					<div className="space-y-6">
+						{/* Date Range Filter */}
+						<div className="bg-white p-4 border border-gray-100 rounded-lg">
+							<h3 className="mb-3 font-semibold text-gray-700 text-sm">
+								Date Range
+							</h3>
+							<DateRangePicker
+								startDate={startDate}
+								endDate={endDate}
+								onStartDateChange={setStartDate}
+								onEndDateChange={setEndDate}
+								availableRange={dateRange || undefined}
+							/>
+						</div>
+
+						{/* Event Type Filter */}
+						{eventTypes.length > 0 && (
+							<div className="bg-white p-4 border border-gray-100 rounded-lg">
+								<FilterDropdown
+									label="Event Types"
+									options={eventTypes}
+									selectedOptions={selectedEventTypes}
+									onToggle={handleEventTypeToggle}
+									onReset={() => setSelectedEventTypes([])}
+								/>
+							</div>
+						)}
+
+						{/* Chart Toggles */}
+						<div className="bg-white p-4 border border-gray-100 rounded-lg">
+							<div className="flex items-center gap-4">
+								<span className="font-semibold text-gray-700 text-sm">
+									Chart Display:
+								</span>
+								<ToggleSwitch
+									enabled={showChangePoints}
+									onChange={setShowChangePoints}
+									label="Change Points"
+									size="sm"
+								/>
+								<ToggleSwitch
+									enabled={showEvents}
+									onChange={setShowEvents}
+									label="Events"
+									size="sm"
+								/>
+							</div>
+						</div>
+					</div>
+				</Card>
+
 				{/* Interactive Price Chart */}
 				<Card title="Brent Oil Price History" className="mb-8">
 					{pricesLoading ? (
@@ -205,63 +316,132 @@ function App() {
 						<ErrorDisplay error={pricesError} />
 					) : prices && prices.length > 0 ? (
 						<>
-							<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-								<p className="text-gray-600 text-sm">
-									Historical Brent crude oil prices from {dateRange?.min_date} to{" "}
-									{dateRange?.max_date}
-								</p>
-								<div className="flex gap-4">
-									<ToggleSwitch
-										enabled={showChangePoints}
-										onChange={setShowChangePoints}
-										label="Change Points"
-										size="sm"
-									/>
-									<ToggleSwitch
-										enabled={showEvents}
-										onChange={setShowEvents}
-										label="Events"
-										size="sm"
-									/>
+							<div className="flex sm:flex-row flex-col justify-between items-start sm:items-center gap-4 mb-6">
+								<div className="space-y-1 text-gray-600 text-sm">
+									<p>
+										Showing{" "}
+										<span className="font-semibold">
+											{prices.length}
+										</span>{" "}
+										data points
+										{startDate && endDate && (
+											<>
+												{" "}
+												from {startDate} to {endDate}
+											</>
+										)}
+									</p>
+									{dateFilteredEvents && (
+										<p>
+											<span className="font-semibold">
+												{dateFilteredEvents.length}
+											</span>{" "}
+											events in selected range
+											{selectedEventTypes.length > 0 && (
+												<>
+													{" "}
+													(filtered by{" "}
+													{
+														selectedEventTypes.length
+													}{" "}
+													type
+													{selectedEventTypes.length >
+													1
+														? "s"
+														: ""}
+													)
+												</>
+											)}
+										</p>
+									)}
+								</div>
+
+								{/* Chart Legend */}
+								<div className="flex items-center gap-4 bg-gray-50 px-4 py-2 border border-gray-200 rounded-lg text-xs">
+									<div className="flex items-center gap-1.5">
+										<div className="bg-blue-600 w-8 h-0.5"></div>
+										<span className="text-gray-600">
+											Price
+										</span>
+									</div>
+									{showChangePoints && (
+										<div className="flex items-center gap-1.5">
+											<div className="bg-red-600 border-t-2 border-dashed w-8 h-0.5"></div>
+											<span className="text-gray-600">
+												Change Points
+											</span>
+										</div>
+									)}
+									{showEvents && (
+										<div className="flex items-center gap-1.5">
+											<div className="bg-amber-600 border-t border-dashed w-8 h-0.5"></div>
+											<span className="text-gray-600">
+												Events
+											</span>
+										</div>
+									)}
 								</div>
 							</div>
 							<PriceChart
 								data={prices}
 								changePoints={changePoints || []}
-								events={events || []}
+								events={dateFilteredEvents || []}
 								showChangePoints={showChangePoints}
 								showEvents={showEvents}
-								height={450}
+								height={500}
 							/>
 						</>
 					) : (
-						<p className="text-center text-gray-500 py-8">
-							No price data available
-						</p>
+						<div className="py-12 text-center">
+							<p className="mb-2 text-gray-500">
+								No price data available for the selected range
+							</p>
+							<button
+								onClick={() => {
+									if (dateRange) {
+										setStartDate(dateRange.min_date);
+										setEndDate(dateRange.max_date);
+									}
+								}}
+								className="font-medium text-blue-600 hover:text-blue-800 text-sm"
+							>
+								Reset filters
+							</button>
+						</div>
 					)}
 				</Card>
 
 				{/* Change Points Section */}
 				{changePoints && changePoints.length > 0 && (
 					<Card title="Detected Change Points" className="mb-8">
+						<p className="mb-4 text-gray-600 text-sm">
+							Bayesian change point detection identified
+							significant shifts in price behavior at the
+							following dates.
+						</p>
 						<div className="space-y-4">
 							{changePoints.map((cp) => (
 								<div
 									key={cp.id}
-									className="hover:shadow-md p-4 border border-gray-200 rounded-lg transition-shadow"
+									className="bg-linear-to-br from-white to-gray-50 hover:shadow-lg p-6 border border-gray-200 hover:border-blue-200 rounded-lg transition-all duration-200"
 								>
 									<div className="flex justify-between items-start">
 										<div className="flex-1">
-											<div className="flex items-center gap-2 mb-2">
-												<h3 className="font-semibold text-gray-900 text-lg">
-													{cp.date}
-												</h3>
-												<span className="bg-blue-100 px-2 py-1 rounded font-medium text-blue-800 text-xs">
-													{(
-														cp.confidence * 100
-													).toFixed(0)}
-													% confidence
-												</span>
+											<div className="flex items-center gap-3 mb-3">
+												<div className="flex justify-center items-center bg-red-100 rounded-full w-10 h-10">
+													<Activity className="w-5 h-5 text-red-600" />
+												</div>
+												<div>
+													<h3 className="font-bold text-gray-900 text-lg">
+														{cp.date}
+													</h3>
+													<span className="bg-blue-100 px-3 py-1 rounded-full font-semibold text-blue-800 text-xs">
+														{(
+															cp.confidence * 100
+														).toFixed(0)}
+														% confidence
+													</span>
+												</div>
 											</div>
 											<p className="mb-2 text-gray-600 text-sm">
 												<strong>
@@ -320,60 +500,97 @@ function App() {
 				)}
 
 				{/* Events Section */}
-				{events && events.length > 0 && (
+				{dateFilteredEvents && dateFilteredEvents.length > 0 ? (
 					<Card title="Major Events" className="mb-8">
-						<p className="text-gray-600 text-sm mb-4">
-							Historical events that may have influenced Brent oil prices. 
-							Includes geopolitical events, OPEC decisions, economic shocks, and sanctions.
-						</p>
+						<div className="flex justify-between items-center mb-4">
+							<p className="text-gray-600 text-sm">
+								Historical events that may have influenced Brent
+								oil prices.
+								{selectedEventTypes.length > 0 && (
+									<>
+										{" "}
+										Filtered by:{" "}
+										<span className="font-semibold">
+											{selectedEventTypes.join(", ")}
+										</span>
+									</>
+								)}
+							</p>
+							{dateFilteredEvents.length > 6 && (
+								<button
+									onClick={() =>
+										setShowAllEvents(!showAllEvents)
+									}
+									className="font-medium text-blue-600 hover:text-blue-800 text-sm"
+								>
+									{showAllEvents
+										? "Show Less"
+										: `Show All (${dateFilteredEvents.length})`}
+								</button>
+							)}
+						</div>
 						<div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-							{(showAllEvents ? events : events.slice(0, 6)).map((event) => (
+							{(showAllEvents
+								? dateFilteredEvents
+								: dateFilteredEvents.slice(0, 6)
+							).map((event) => (
 								<div
 									key={event.id}
-									className="hover:shadow-md hover:border-gray-300 p-4 border border-gray-200 rounded-lg transition-all cursor-pointer"
+									className="bg-white hover:shadow-lg p-5 border border-gray-200 hover:border-blue-200 rounded-lg hover:scale-105 transition-all duration-200 cursor-pointer"
 								>
-									<div className="flex justify-between items-start mb-2">
-										<h4 className="font-semibold text-gray-900 text-sm">
+									<div className="flex justify-between items-start mb-3">
+										<h4 className="font-bold text-gray-900 text-sm leading-tight">
 											{event.event_name}
 										</h4>
 										<span
-											className={`px-2 py-1 text-xs font-medium rounded shrink-0 ml-2 ${
+											className={`px-2.5 py-1 text-xs font-semibold rounded-full shrink-0 ml-2 ${
 												event.event_type ===
 												"geopolitical"
-													? "bg-red-100 text-red-800"
+													? "bg-red-100 text-red-700"
 													: event.event_type ===
 														  "economic_shock"
-														? "bg-amber-100 text-amber-800"
+														? "bg-amber-100 text-amber-700"
 														: event.event_type ===
 															  "opec_decision"
-															? "bg-green-100 text-green-800"
-															: "bg-purple-100 text-purple-800"
+															? "bg-green-100 text-green-700"
+															: "bg-purple-100 text-purple-700"
 											}`}
 										>
-											{event.event_type.replace('_', ' ')}
+											{event.event_type.replace("_", " ")}
 										</span>
 									</div>
-									<p className="mb-2 text-gray-600 text-xs font-medium">
+									<p className="flex items-center gap-1 mb-3 font-semibold text-gray-500 text-xs">
+										<Calendar className="w-3 h-3" />
 										{event.date}
 									</p>
-									<p className="text-gray-500 text-xs line-clamp-3">
+									<p className="text-gray-600 text-xs line-clamp-3 leading-relaxed">
 										{event.description}
 									</p>
 								</div>
 							))}
 						</div>
-						{events.length > 6 && (
-							<div className="mt-6 text-center">
-								<button
-									onClick={() => setShowAllEvents(!showAllEvents)}
-									className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium text-sm"
-								>
-									{showAllEvents ? 'Show Less' : `Show All ${events.length} Events`}
-								</button>
-							</div>
-						)}
 					</Card>
-				)}
+				) : events && events.length > 0 ? (
+					<Card title="Major Events" className="mb-8">
+						<div className="py-8 text-center">
+							<p className="mb-2 text-gray-500">
+								No events match the selected filters
+							</p>
+							<button
+								onClick={() => {
+									setSelectedEventTypes([]);
+									if (dateRange) {
+										setStartDate(dateRange.min_date);
+										setEndDate(dateRange.max_date);
+									}
+								}}
+								className="font-medium text-blue-600 hover:text-blue-800 text-sm"
+							>
+								Reset filters
+							</button>
+						</div>
+					</Card>
+				) : null}
 
 				{/* API Connection Error */}
 				{!apiHealthy && apiHealthy !== null && (
