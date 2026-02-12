@@ -257,3 +257,8 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Dashboard environment files
+dashboard/backend/.env
+dashboard/frontend/.env
+dashboard/frontend/.env.local

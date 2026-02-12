@@ -1,0 +1,7 @@
+Flask
+Flask-CORS
+Flask-RESTful
+flask-swagger-ui
+python-dotenv
+pandas
+numpy

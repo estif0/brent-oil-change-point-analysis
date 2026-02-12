@@ -1,0 +1,2 @@
+changepoint_id,date,mean_before,mean_after,std_before,std_after,price_change,percent_change,confidence,associated_event
+1,2008-07-14,0.000344,-0.000045,0.022404,0.027202,-0.000389,-113.12,0.94,Oil Price Peak (2008-07-11)
