@@ -1,174 +1,179 @@
 # Brent Oil Change Point Analysis - Backend API
 
-Flask-based REST API for the Brent Oil Change Point Analysis Dashboard.
-
 ## Overview
 
-This backend provides RESTful API endpoints for accessing:
-- Historical Brent oil price data
-- Detected change points from Bayesian analysis
-- Geopolitical and economic events
-- Statistical analyses and impact assessments
+RESTful Flask API serving historical Brent oil price data, detected change points, and geopolitical event information for analysis and visualization.
 
-## Tech Stack
+## Features
 
-- **Framework:** Flask 3.0
-- **API:** Flask-RESTful
-- **CORS:** Flask-CORS
-- **Documentation:** Swagger UI (OpenAPI 3.0)
-- **Data Processing:** pandas, numpy
-- **Configuration:** python-dotenv
+- **16 RESTful Endpoints** - Complete API for prices, change points, and events
+- **Service Layer Architecture** - Clean separation of concerns
+- **CORS Enabled** - Cross-origin requests supported
+- **Swagger Documentation** - Interactive API docs at `/api/docs`
+- **Error Handling** - Comprehensive error responses
+- **CSV Data Backend** - Efficient file-based storage
 
-## Setup
+## Technology Stack
 
-### 1. Install Dependencies
+- **Flask 3.0.0** - Web framework
+- **Flask-RESTful** - REST API extension
+- **Flask-CORS** - Cross-origin resource sharing
+- **flask-swagger-ui** - API documentation
+- **pandas** - Data manipulation
+
+## Quick Start
 
 ```bash
 cd dashboard/backend
+python -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 2. Environment Configuration
-
-Copy `.env.example` to `.env` and adjust as needed:
-
-```bash
-cp .env.example .env
-```
-
-The default configuration should work for local development.
-
-### 3. Run the Server
-
-```bash
 python app.py
 ```
 
-The API will be available at `http://localhost:5000`
+API available at **http://localhost:5000**
+Swagger docs at **http://localhost:5000/api/docs**
 
-## API Documentation
+## Installation
 
-### Interactive Documentation (Swagger UI)
+### Prerequisites
+- Python 3.8 or higher
+- pip (latest version)
 
-Full interactive API documentation is available at:
+### Steps
 
-**http://localhost:5000/api/docs**
+1. **Create Virtual Environment**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\Scripts\activate
+   ```
 
-The Swagger UI provides:
-- Complete endpoint documentation with request/response schemas
-- Try-it-out functionality to test endpoints directly
-- Example requests and responses
-- Data model schemas
+2. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### OpenAPI Specification
+3. **Verify Data Files**
+   Required files:
+   - `../../data/raw/BrentOilPrices.csv`
+   - `../../data/events.csv`
+   - `../../reports/changepoints_processed.csv`
 
-The OpenAPI 3.0 specification is available at:
-
-**http://localhost:5000/swagger.json**
+4. **Run Server**
+   ```bash
+   python app.py
+   ```
 
 ## API Endpoints
 
 ### Health Check
+- `GET /health` - API health status
 
-**GET** `/health`
-- Check if API is running
+### Price Endpoints
+- `GET /api/prices` - Historical prices (with date filters)
+- `GET /api/prices/date-range` - Min/max dates
+- `GET /api/prices/statistics` - Price statistics
+- `GET /api/prices/info` - Metadata
 
-**GET** `/`
-- API information and available endpoints
+### Change Point Endpoints
+- `GET /api/changepoints` - All change points
+- `GET /api/changepoints/<date>` - Specific change point
+- `GET /api/changepoints/<date>/impact` - Impact analysis
+- `GET /api/changepoints/stats` - Statistics
 
-### Price Data
+### Event Endpoints
+- `GET /api/events` - All events (with filters)
+- `GET /api/events/<id>` - Specific event
+- `GET /api/events/<id>/impact` - Impact analysis
+- `GET /api/events/types` - Event types
+- `GET /api/events/types/<type>` - Events by type
+- `GET /api/events/stats` - Statistics
 
-**GET** `/api/prices`
-- Get historical price data
-- Query params:
-  - `start_date` (optional): YYYY-MM-DD
-  - `end_date` (optional): YYYY-MM-DD
+### Correlation Endpoint
+- `GET /api/correlations` - Change point-event correlations
 
-**GET** `/api/prices/statistics`
-- Get price statistics for date range
-- Query params: same as `/api/prices`
+## Example Usage
 
-**GET** `/api/prices/date-range`
-- Get available date range in dataset
-
-**GET** `/api/prices/info`
-- Get dataset information
-
-### Change Points
-
-**GET** `/api/changepoints`
-- Get list of detected change points
-- Query params:
-  - `start_date` (optional): YYYY-MM-DD
-  - `end_date` (optional): YYYY-MM-DD
-  - `min_confidence` (optional): float (0-1)
-
-**GET** `/api/changepoints/<id>`
-- Get details of a specific change point
-- Path param: `id` (integer)
-
-**GET** `/api/changepoints/stats`
-- Get change point statistics
-
-### Events
-
-**GET** `/api/events`
-- Get list of events
-- Query params:
-  - `start_date` (optional): YYYY-MM-DD
-  - `end_date` (optional): YYYY-MM-DD
-  - `event_type` (optional): geopolitical, opec_decision, economic_shock, sanction
-
-**GET** `/api/events/<id>`
-- Get details of a specific event
-- Path param: `id` (integer)
-
-**GET** `/api/events/<id>/impact`
-- Get price impact analysis for an event
-- Path param: `id` (integer)
-- Query param: `window_days` (optional, default 30)
-
-**GET** `/api/events/types`
-- Get list of unique event types
-
-**GET** `/api/events/stats`
-- Get event statistics
-
-## Example Requests
-
-### Using curl
-
+### Get Prices with Date Range
 ```bash
-# Get price data for 2020
-curl "http://localhost:5000/api/prices?start_date=2020-01-01&end_date=2020-12-31"
-
-# Get price statistics
-curl "http://localhost:5000/api/prices/statistics?start_date=2020-01-01&end_date=2020-12-31"
-
-# Get change points
-curl "http://localhost:5000/api/changepoints"
-
-# Get events
-curl "http://localhost:5000/api/events?event_type=geopolitical"
-
-# Get event impact
-curl "http://localhost:5000/api/events/0/impact?window_days=30"
+curl "http://localhost:5000/api/prices?start_date=2008-01-01&end_date=2008-12-31"
 ```
 
-### Response Format
-
-All successful responses follow this format:
-
+Response:
 ```json
 {
   "success": true,
-  "data": [...],  // or "statistics", "info", etc.
-  "count": 10     // for list endpoints
+  "data": [
+    {"date": "2008-01-02", "price": 96.84}
+  ],
+  "count": 252
 }
 ```
 
-Error responses:
+### Get Change Points
+```bash
+curl http://localhost:5000/api/changepoints
+```
 
+Response:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "date": "2008-07-14",
+      "confidence": 94,
+      "before_mean": 68.45,
+      "after_mean": 51.23
+    }
+  ],
+  "count": 1
+}
+```
+
+### Get Events by Type
+```bash
+curl "http://localhost:5000/api/events?event_type=opec_decision"
+```
+
+## Project Structure
+
+```
+dashboard/backend/
+├── app.py              # Flask app entry point
+├── config.py           # Configuration
+├── requirements.txt    # Dependencies
+├── swagger.json        # OpenAPI spec
+├── routes/             # API route blueprints
+│   ├── data_routes.py
+│   ├── changepoint_routes.py
+│   └── event_routes.py
+├── services/           # Business logic layer
+│   ├── data_service.py
+│   ├── changepoint_service.py
+│   └── event_service.py
+└── tests/              # Unit tests
+```
+
+## Service Layer
+
+### DataService
+- Load price data from CSV
+- Filter by date range
+- Calculate statistics
+
+### ChangePointService
+- Load change point data
+- Get details and impact metrics
+
+### EventService
+- Load event data
+- Filter by date and type
+- Get event details and impact
+
+## Error Responses
+
+All errors return:
 ```json
 {
   "success": false,
@@ -176,97 +181,57 @@ Error responses:
 }
 ```
 
-## Project Structure
-
-```
-backend/
-├── app.py                 # Flask application entry point
-├── config.py              # Configuration management
-├── requirements.txt       # Python dependencies
-├── .env                   # Environment variables (gitignored)
-├── .env.example           # Example environment variables
-├── services/              # Business logic layer
-│   ├── __init__.py
-│   ├── data_service.py
-│   ├── changepoint_service.py
-│   └── event_service.py
-├── routes/                # API endpoints
-│   ├── __init__.py
-│   ├── data_routes.py
-│   ├── changepoint_routes.py
-│   └── event_routes.py
-└── tests/                 # Unit tests
-    └── test_services.py
-```
-
-## Running Tests
-
-```bash
-cd dashboard/backend
-python -m pytest tests/
-```
-
-Or run specific test file:
-
-```bash
-python tests/test_services.py
-```
-
-## Development
-
-### Adding New Endpoints
-
-1. Create service method in appropriate service class (`services/`)
-2. Create Flask-RESTful Resource in appropriate route file (`routes/`)
-3. Register resource in `app.py` `register_routes()` function
-4. Add tests in `tests/`
-
-### Configuration
-
-The application uses environment-based configuration:
-- `DevelopmentConfig` - For local development (default)
-- `ProductionConfig` - For production deployment
-- `TestingConfig` - For running tests
-
-Set `FLASK_ENV` in `.env` to switch between configurations.
-
-## CORS
-
-CORS is enabled for the origins specified in `CORS_ORIGINS` environment variable. Default includes common local development ports for frontend frameworks.
-
-## Data Sources
-
-The API loads data from:
-- `data/raw/BrentOilPrices.csv` - Historical price data
-- `data/events.csv` - Event data
-- `reports/changepoint_summary.csv` - Detected change points
-
-Paths are configurable via environment variables.
-
-## Error Handling
-
-The API provides appropriate HTTP status codes:
+HTTP Status Codes:
 - `200` - Success
-- `404` - Resource not found
-- `500` - Internal server error
+- `400` - Bad Request
+- `404` - Not Found
+- `500` - Internal Server Error
+
+## Testing
+
+```bash
+# Run all tests
+pytest tests/
+
+# Run specific test file
+pytest tests/test_data_service.py -v
+
+# With coverage
+pytest --cov=services tests/
+```
 
 ## Production Deployment
 
-For production deployment:
-
-1. Set `FLASK_ENV=production` in environment
-2. Use a production WSGI server (gunicorn, uWSGI)
-3. Configure proper CORS origins
-4. Use environment variables for sensitive configuration
-5. Enable HTTPS
-6. Consider rate limiting and authentication if needed
-
-Example with gunicorn:
-
+### Using Gunicorn
 ```bash
 gunicorn -w 4 -b 0.0.0.0:5000 app:app
 ```
 
-## License
+### Security Considerations
+- Configure CORS for production domains
+- Add authentication for sensitive endpoints
+- Enable rate limiting
+- Use HTTPS
 
-Part of the Brent Oil Change Point Analysis project for Birhan Energies.
+## Troubleshooting
+
+**Port already in use:**
+```bash
+lsof -ti:5000 | xargs kill -9
+```
+
+**File not found:**
+```bash
+# Verify data files exist
+ls -la ../../data/raw/BrentOilPrices.csv
+```
+
+**Import errors:**
+```bash
+pip install -r requirements.txt --force-reinstall
+```
+
+---
+
+**API Documentation:** http://localhost:5000/api/docs
+**Backend Health:** http://localhost:5000/health

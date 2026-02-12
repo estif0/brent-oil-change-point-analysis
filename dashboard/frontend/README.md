@@ -1,147 +1,144 @@
 # Brent Oil Change Point Analysis - Frontend
 
-React + TypeScript + Vite dashboard for visualizing Brent oil price change points and the impact of major geopolitical and economic events.
+## Overview
 
-## 🚀 Quick Start
+Interactive React + TypeScript dashboard for visualizing Brent oil price changes, detected change points, and their correlation with major geopolitical events. Built with modern web technologies and responsive design principles.
+
+## Features
+
+- **Interactive Dashboard**: Real-time data visualization with stats cards, charts, and filters  
+- **Price Analysis**: Historical price chart with zoom, pan, and tooltip capabilities
+- **Change Point Visualization**: Markers showing detected change points with confidence levels
+- **Event Highlighting**: Toggle event markers on timeline to see correlations
+- **Detailed Analysis**: Deep-dive page for analyzing specific change points with before/after statistics
+- **Event Explorer**: Browse and filter 17+ historical events with advanced search
+- **Responsive Design**: Mobile-first approach, works on all screen sizes
+- **Type-Safe**: Full TypeScript implementation with comprehensive type definitions
+
+## Technology Stack
+
+- **React 19.2.0** - UI framework
+- **TypeScript 5.9.3** - Type-safe development
+- **Vite 7.3.1** - Build tool and dev server
+- **Tailwind CSS 4.1.18** - Utility-first styling
+- **shadcn/ui** - High-quality component library
+- **Recharts 3.7.0** - Data visualization
+- **Axios 1.13.5** - HTTP client
+- **React Router DOM 7.13.0** - Client-side routing
+- **date-fns 4.1.0** - Date formatting utilities
+- **Lucide React 0.563.0** - Beautiful icons
+
+## Quick Start
 
 ```bash
-# Install dependencies
+cd dashboard/frontend
 pnpm install
-
-# Start development server
 pnpm run dev
-
-# Build for production
-pnpm run build
 ```
 
-## 📦 Tech Stack
+Dashboard available at **http://localhost:5173**
 
-- **Framework:** React 19 + TypeScript  
-- **Build Tool:** Vite 7
-- **Styling:** Tailwind CSS 4
-- **Charts:** Recharts
-- **HTTP Client:** Axios
-- **Routing:** React Router DOM (planned)
-- **Icons:** Lucide React
-- **Date Utils:** date-fns
+## Installation
 
-## 📁 Project Structure
+### Prerequisites
+- Node.js 18.x or higher
+- pnpm 10.x or higher (or npm/yarn)
+- Backend API running on http://localhost:5000
+
+### Steps
+
+1. **Install Dependencies**
+   ```bash
+   pnpm install
+   ```
+
+2. **Configure Environment**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit `.env`:
+   ```env
+   VITE_API_BASE_URL=http://localhost:5000
+   ```
+
+3. **Start Development Server**
+   ```bash
+   pnpm run dev
+   ```
+
+## Available Scripts
+
+```bash
+pnpm run dev      # Start development server
+pnpm run build    # Build for production
+pnpm run preview  # Preview production build
+pnpm run lint     # Lint code
+```
+
+## Project Structure
 
 ```
 src/
-├── components/ui/      # Reusable UI components
-├── config/            # Configuration & constants
-├── hooks/             # Custom React hooks
-├── lib/               # Utility libraries
-├── services/          # API service layer
-├── types/             # TypeScript definitions
-├── App.tsx           # Main component
-└── main.tsx          # Entry point
+├── components/
+│   ├── ui/          # shadcn UI components
+│   ├── common/      # Filters, pickers
+│   └── charts/      # PriceChart
+├── pages/           # Route pages
+│   ├── DetailedAnalysis.tsx
+│   ├── EventExplorer.tsx
+│   └── About.tsx
+├── hooks/           # React hooks (useApi, useData)
+├── services/        # API service layer
+├── lib/             # API client
+├── types/           # TypeScript types
+├── config/          # Configuration
+├── App.tsx          # Main dashboard
+└── main.tsx         # Entry point with routing
 ```
 
-## ✅ Currently Implemented
+## Pages
 
-- **API Integration** - Full REST API client with error handling
-- **Type Safety** - Complete TypeScript coverage
-- **Custom Hooks** - Reusable data fetching (`useQuery`, `useLazyQuery`)
-- **UI Components** - Card, LoadingSpinner, ErrorDisplay
-- **Dashboard Overview** - Stats cards for data range, change points, events
-- **Health Check** - API connection status indicator
-- **Responsive Design** - Mobile-friendly Tailwind layout
-- **Change Point Display** - Detected change points with confidence
-- **Event Cards** - Major events with type badges
+- **Dashboard (/)** - Overview with stats, chart, filters
+- **Detailed Analysis (/analysis)** - Change point deep dive
+- **Event Explorer (/events)** - Searchable event browser
+- **About (/about)** - Methodology and project info
 
-## 🔜 Coming Next
+## API Integration
 
-- Interactive charts with Recharts
-- Date range filters
-- Event impact visualizations
-- Multi-page routing
-- Advanced filtering options
-- Export features (CSV/PNG)
+Connects to Flask backend at http://localhost:5000
 
-## 🔌 API Endpoints
-
-### Price Data
+Key endpoints:
 - `GET /api/prices` - Historical prices
-- `GET /api/prices/statistics` - Statistics
-- `GET /api/prices/date-range` - Date range
-- `GET /api/prices/info` - Metadata
+- `GET /api/changepoints` - Detected change points
+- `GET /api/events` - Historical events
+- `GET /health` - API health check
 
-### Change Points
-- `GET /api/changepoints` - All change points
-- `GET /api/changepoints/:id` - Specific change point
-- `GET /api/changepoints/stats` - Statistics
+## Troubleshooting
 
-### Events
-- `GET /api/events` - All events
-- `GET /api/events/:id` - Specific event
-- `GET /api/events/:id/impact` - Impact analysis
-- `GET /api/events/types` - Event types
-- `GET /api/events/stats` - Statistics
-
-## 🪝 Custom Hooks
-
-```tsx
-// Generic data fetching
-const { data, loading, error, refetch } = useQuery(
-  () => fetchPrices('2020-01-01', '2020-12-31'),
-  ['2020-01-01', '2020-12-31']
-);
-
-// Specific hooks
-const { data: prices } = usePrices(startDate, endDate);
-const { data: changePoints } = useChangePoints(minConfidence);
-const { data: events } = useEvents(eventType);
-```
-
-## 🎨 UI Components
-
-```tsx
-<Card title="My Title">
-  <p>Content</p>
-</Card>
-
-<LoadingSpinner size="md" />
-
-<ErrorDisplay error="Error message" onRetry={refetch} />
-```
-
-## ⚙️ Environment Variables
-
-Create a `.env` file:
-
-```env
-VITE_API_BASE_URL=http://localhost:5000
-```
-
-## 🐛 Troubleshooting
-
-**API Connection Issues:**
+**Port already in use:**
 ```bash
-# Check backend health
-curl http://localhost:5000/health
-
-# Verify .env configuration
-cat .env
+lsof -ti:5173 | xargs kill -9
 ```
 
-**Build Errors:**
+**API connection failed:**
+1. Verify backend running: `curl http://localhost:5000/health`
+2. Check `.env` file
+3. Ensure CORS enabled on backend
+
+**Build errors:**
 ```bash
-# Clear and reinstall
 rm -rf node_modules pnpm-lock.yaml
 pnpm install
 ```
 
-## 📸 Current Dashboard
+## Browser Support
 
-The dashboard displays:
-- **API Health Status** - Real-time connection indicator
-- **Stats Grid** - Data range (1987-2022), 1 change point, 17 events
-- **Change Point Card** - 2008-07-14 detection with 94% confidence  
-- **Event Preview** - Major events like Gulf War, Financial Crisis, etc.
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
 
-## 📄 License
+---
 
-Part of the Brent Oil Change Point Analysis project © 2026 Birhan Energies
+**Built for Birhan Energies | Part of the Brent Oil Change Point Analysis project**

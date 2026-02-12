@@ -5,7 +5,16 @@
  */
 
 import { useEffect, useState, useMemo } from "react";
-import { Activity, TrendingUp, Calendar, AlertTriangle } from "lucide-react";
+import { Link } from "react-router-dom";
+import {
+	Activity,
+	TrendingUp,
+	Calendar,
+	AlertTriangle,
+	BarChart3,
+	Calendar as CalendarIcon,
+	Info,
+} from "lucide-react";
 import {
 	LoadingSpinner,
 	ErrorDisplay,
@@ -115,7 +124,30 @@ function App() {
 								crude oil prices
 							</p>
 						</div>
-						<div className="flex items-center gap-2">
+						<div className="flex items-center gap-4">
+							<nav className="flex items-center gap-2">
+								<Link
+									to="/analysis"
+									className="flex items-center gap-2 hover:bg-blue-50 px-3 py-2 rounded-lg font-medium text-slate-700 hover:text-blue-600 text-sm transition-colors"
+								>
+									<BarChart3 className="w-4 h-4" />
+									Analysis
+								</Link>
+								<Link
+									to="/events"
+									className="flex items-center gap-2 hover:bg-blue-50 px-3 py-2 rounded-lg font-medium text-slate-700 hover:text-blue-600 text-sm transition-colors"
+								>
+									<CalendarIcon className="w-4 h-4" />
+									Events
+								</Link>
+								<Link
+									to="/about"
+									className="flex items-center gap-2 hover:bg-blue-50 px-3 py-2 rounded-lg font-medium text-slate-700 hover:text-blue-600 text-sm transition-colors"
+								>
+									<Info className="w-4 h-4" />
+									About
+								</Link>
+							</nav>
 							<span
 								className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
 									apiHealthy

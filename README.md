@@ -1,477 +1,382 @@
 # Brent Oil Change Point Analysis
 
-A Bayesian statistical analysis framework for detecting and analyzing structural breaks in Brent crude oil prices, identifying how major geopolitical events, OPEC decisions, and economic shocks impact global oil markets.
+A comprehensive data analysis project using Bayesian methods to identify and quantify how major geopolitical events, OPEC decisions, and economic shocks impact Brent crude oil prices. Built for **Birhan Energies** to provide data-driven insights for energy sector stakeholders.
 
-**Analysis Period**: May 1987 - September 2022  
-**Methodology**: Bayesian Change Point Detection with MCMC Sampling
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![Flask](https://img.shields.io/badge/Flask-3.0.0-green.svg)
+![React](https://img.shields.io/badge/React-19.2.0-blue.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue.svg)
 
----
+## 📋 Project Overview
 
-## 📋 Table of Contents
+This project analyzes **35 years** of Brent oil price data (May 1987 - September 2022) using **Bayesian change point detection** to identify significant structural breaks and correlate them with **17 major historical events**.
 
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Project Structure](#project-structure)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Usage](#usage)
-- [Data Sources](#data-sources)
-- [Documentation](#documentation)
-- [Testing](#testing)
-- [Dashboard](#dashboard)
-- [Contributing](#contributing)
-- [License](#license)
+### Key Features
 
----
+- ✅ **Bayesian Change Point Detection** using PyMC for probabilistic modeling
+- ✅ **Event Correlation Analysis** linking price changes to geopolitical events
+- ✅ **Quantitative Impact Assessment** with before/after statistics
+- ✅ **Interactive Dashboard** built with React + TypeScript + Tailwind CSS
+- ✅ **RESTful API** with 16 endpoints serving data and analysis results
+- ✅ **Comprehensive Documentation** including methodology and assumptions
 
-## 🎯 Overview
+### Dataset Summary
 
-This project provides data-driven insights into historical Brent oil price changes to guide:
-- **Investment strategies** for energy sector stakeholders
-- **Policy development** for government agencies
-- **Operational planning** for energy companies
+- **Price Records:** 9,154 daily observations
+- **Date Range:** May 20, 1987 - September 30, 2022 (35+ years)
+- **Events Tracked:** 17 major events across 4 categories
+- **Change Points Detected:** 1 high-confidence change point (94%)
 
-Using Bayesian change point detection, we identify structural breaks in oil prices and quantify their relationship with major world events including wars, financial crises, OPEC decisions, and economic shocks.
-
-### Business Objectives
-
-- Analyze how political and economic events affect Brent oil prices
-- Quantify the magnitude and direction of price changes at structural breaks
-- Associate change points with specific historical events
-- Provide probabilistic uncertainty estimates using Bayesian inference
-- Deliver insights through an interactive web dashboard
-
----
-
-## ✨ Key Features
-
-### Analysis Capabilities
-- **Bayesian Change Point Detection**: Probabilistic identification of structural breaks
-- **Event Association**: Links detected change points to geopolitical events, OPEC decisions, and economic shocks
-- **Impact Quantification**: Measures price shifts with credible intervals
-- **Stationarity Testing**: ADF and KPSS tests for time series properties
-- **Volatility Analysis**: Rolling statistics and variance assessment
-- **MCMC Diagnostics**: Comprehensive convergence checks (R-hat, ESS, trace plots)
-
-### Engineering Features
-- **Modular OOP Design**: Clean, maintainable, and extensible codebase
-- **Comprehensive Testing**: 219+ unit tests with pytest
-- **Type Safety**: Full type hints for better IDE support and error detection
-- **Production Ready**: Error handling, logging, and validation throughout
-- **Documentation**: Extensive docstrings and user guides
-
----
-
-## 📁 Project Structure
-
-```
-brent-oil-change-point-analysis/
-├── src/                          # Core Python modules (OOP, documented, tested)
-│   ├── data/                     # Data loading and validation
-│   │   ├── loader.py            # BrentDataLoader class
-│   │   └── event_loader.py      # EventDataLoader class
-│   ├── eda/                      # Exploratory data analysis
-│   │   └── time_series_analysis.py  # TimeSeriesAnalyzer class
-│   ├── statistical_tests/        # Statistical testing
-│   │   └── stationarity.py      # StationarityTester class
-│   ├── models/                   # Bayesian models
-│   │   ├── bayesian_changepoint.py  # BayesianChangePointModel class
-│   │   └── diagnostics.py       # ModelDiagnostics class
-│   ├── analysis/                 # Change point analysis
-│   │   └── changepoint_analyzer.py  # ChangePointAnalyzer class
-│   └── visualization/            # Plotting utilities
-│       └── plots.py             # Visualization functions
-│
-├── tests/                        # Unit tests (mirrors src/ structure)
-│   ├── test_data_loader.py
-│   ├── test_event_loader.py
-│   ├── test_time_series_analysis.py
-│   ├── test_stationarity.py
-│   ├── test_bayesian_changepoint.py
-│   ├── test_diagnostics.py
-│   ├── test_changepoint_analyzer.py
-│   └── test_plots.py
-│
-├── notebooks/                    # Jupyter notebooks for analysis
-│   ├── 01_exploratory_data_analysis.ipynb
-│   └── 02_bayesian_changepoint_modeling.ipynb
-│
-├── data/                         # Data files (gitignored)
-│   ├── raw/
-│   │   └── BrentOilPrices.csv   # Historical Brent oil prices
-│   ├── events.csv               # Curated event dataset (17 events)
-│   └── processed/               # Processed data outputs
-│
-├── docs/                         # Documentation
-│   ├── project-overview.md      # High-level project description
-│   ├── steps.md                 # Task tracking and milestones
-│   ├── analysis_workflow.md     # Detailed analysis workflow
-│   ├── assumptions_and_limitations.md  # Critical assumptions
-│   ├── communication_channels.md  # Stakeholder communication guide
-│   ├── interim-code-eval.md     # Interim evaluation criteria
-│   └── final-code-eval.md       # Final evaluation criteria
-│
-├── reports/                      # Analysis outputs
-│   ├── figures/                 # Saved visualizations
-│   ├── interim/                 # Interim submission materials
-│   └── final/                   # Final submission materials
-│
-├── dashboard/                    # Web dashboard (Task 3)
-│   ├── backend/                 # Flask API
-│   └── frontend/                # React + TypeScript app
-│
-├── requirements.txt             # Python dependencies
-├── pytest.ini                   # Pytest configuration
-└── README.md                    # This file
-```
-
----
-
-## 🚀 Installation
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.9+ (recommended: 3.10 or 3.11)
-- pip or conda package manager
-- Git
+- **Python** 3.8+
+- **Node.js** 18+
+- **pnpm** 10+ (or npm/yarn)
+- **Git**
 
-### Step 1: Clone the Repository
+### Installation
 
 ```bash
+# Clone the repository
 git clone <repository-url>
 cd brent-oil-change-point-analysis
-```
 
-### Step 2: Create Virtual Environment
-
-**Using venv:**
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-**Using conda:**
-```bash
-conda create -n brent-analysis python=3.10
-conda activate brent-analysis
-```
-
-### Step 3: Install Dependencies
-
-```bash
+# Install Python dependencies
 pip install -r requirements.txt
+
+# Setup backend
+cd dashboard/backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python app.py &  # Runs on http://localhost:5000
+
+# Setup frontend
+cd ../frontend
+pnpm install
+pnpm run dev  # Runs on http://localhost:5173
 ```
 
-### Step 4: Verify Installation
+### Access the Dashboard
 
-```bash
-# Run tests to ensure everything is working
-pytest tests/ -v
+- **Frontend:** http://localhost:5173
+- **Backend API:** http://localhost:5000
+- **API Documentation:** http://localhost:5000/api/docs
 
-# Should see: 219 passed
+## 📊 Key Findings
+
+### Detected Change Point
+
+**Date:** July 14, 2008  
+**Confidence:** 94%  
+**Impact:** Average daily price decreased from $68.45 to $51.23 (-25.16%)
+
+**Associated Event:** 2008 Financial Crisis (September 15, 2008)  
+The change point occurred approximately 2 months before the Lehman Brothers collapse, suggesting market anticipation of the crisis.
+
+### Event Categories
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| **Geopolitical** | 6 | Gulf War, Iraq Invasion, Libya Crisis |
+| **OPEC Decisions** | 5 | Production cuts, quota changes |
+| **Economic Shocks** | 4 | 2008 Financial Crisis, COVID-19 |
+| **Sanctions** | 2 | Iran sanctions, Russia sanctions |
+
+## 🏗️ Project Structure
+
 ```
-
----
-
-## ⚡ Quick Start
-
-### 1. Load and Explore Data
-
-```python
-# Simple approach - use the convenience function
-from src.data import load_brent_data, EventDataLoader
-
-# Load Brent oil prices with automatic date parsing
-data = load_brent_data('data/raw/BrentOilPrices.csv')
-print(f"Loaded {len(data)} price observations")
-print(f"Date range: {data.index.min()} to {data.index.max()}")
-
-# Alternative: Use the full class for advanced features
-from src.data import BrentDataLoader
-
-loader = BrentDataLoader()
-data = loader.load_data('data/raw/BrentOilPrices.csv')
-validation = loader.validate_data()  # Returns detailed validation report
-if validation['is_valid']:
-    print("✓ Data validation passed")
-    
-# Load historical events
-event_loader = EventDataLoader()
-events = event_loader.load_events('data/events.csv')
-print(f"Loaded {len(events)} historical events")
+brent-oil-change-point-analysis/
+├── src/                           # Core Python modules (OOP, modular)
+│   ├── data/                     # Data loading and validation
+│   ├── eda/                      # Exploratory data analysis
+│   ├── statistical_tests/        # Stationarity tests
+│   ├── models/                   # Bayesian change point models
+│   ├── analysis/                 # Change point analysis
+│   └── visualization/            # Plotting utilities
+├── tests/                         # Unit tests for all modules
+├── notebooks/                     # Jupyter notebooks
+│   ├── 01_exploratory_data_analysis.ipynb
+│   └── 02_bayesian_changepoint_modeling.ipynb
+├── data/                          # Data files
+│   ├── raw/BrentOilPrices.csv   # Historical prices
+│   └── events.csv                # Event data
+├── dashboard/                     # Full-stack dashboard
+│   ├── backend/                  # Flask REST API
+│   └── frontend/                 # React + TypeScript UI
+├── docs/                          # Documentation
+│   ├── analysis_workflow.md      # Analysis methodology
+│   ├── assumptions_and_limitations.md
+│   └── final-code-eval.md        # Evaluation criteria
+└── reports/                       # Analysis outputs
+    ├── figures/                   # Saved visualizations
+    └── changepoints_processed.csv # Detected change points
 ```
-
-### 2. Perform EDA and Stationarity Tests
-```python
-from src.eda import TimeSeriesAnalyzer
-from src.statistical_tests import StationarityTester
-
-# Time series analysis
-analyzer = TimeSeriesAnalyzer(data)
-log_returns = analyzer.calculate_log_returns()
-
-# Test stationarity
-tester = StationarityTester()
-adf_result = tester.adf_test(log_returns)
-kpss_result = tester.kpss_test(log_returns)
-interpretation = tester.interpret_results(adf_result, kpss_result)
-print(interpretation)
-```
-
-### 3. Build and Fit Bayesian Change Point Model
-
-```python
-from src.models import BayesianChangePointModel
-
-# Create model
-model = BayesianChangePointModel(log_returns, name="brent_changepoint")
-model.build_model(min_segment_length=30, prior_std_scale=2.0)
-
-# Fit using MCMC
-trace = model.fit(samples=2000, tune=1000, chains=2, random_seed=42)
-
-# Get change point estimate
-changepoint = model.get_changepoint_estimate(method='mean')
-print(f"Change point detected on: {changepoint['date']}")
-print(f"Credible interval: {changepoint['hdi_lower']} to {changepoint['hdi_upper']}")
-```
-
-### 4. Analyze Change Points and Associate with Events
-
-```python
-from src.analysis import ChangePointAnalyzer
-
-# Create analyzer
-cp_analyzer = ChangePointAnalyzer()
-
-# Perform batch analysis
-results = cp_analyzer.batch_analyze(
-    model=model,
-    trace=trace,
-    data=data,
-    events=events,
-    window_days=30
-)
-
-# Generate impact statement
-for cp in results['changepoints']:
-    statement = cp_analyzer.generate_impact_statement(
-        changepoint=cp,
-        impact=cp['impact'],
-        association=cp['event_association']
-    )
-    print(statement)
-```
-
-### 5. Run Jupyter Notebooks
-
-The project includes two comprehensive notebooks:
-
-```bash
-jupyter notebook notebooks/01_exploratory_data_analysis.ipynb
-jupyter notebook notebooks/02_bayesian_changepoint_modeling.ipynb
-```
-
----
-
-## 📊 Usage
-
-### Running the Full Analysis Pipeline
-
-For a complete analysis workflow, see [docs/analysis_workflow.md](docs/analysis_workflow.md).
-
-**Key Steps:**
-1. **Data Loading**: Load price and event data
-2. **EDA**: Explore trends, calculate returns, analyze volatility
-3. **Statistical Testing**: Test stationarity, identify properties
-4. **Bayesian Modeling**: Build and fit change point model
-5. **Analysis**: Identify change points, quantify impact, associate with events
-6. **Reporting**: Generate visualizations and impact statements
-
-### Command Line Usage
-
-Run tests:
-```bash
-pytest tests/                          # Run all tests
-pytest tests/test_data_loader.py -v   # Run specific test file
-pytest tests/ --cov=src                # With coverage report
-```
-
-### Using Individual Modules
-
-Each module in `src/` can be used independently. See README files in each module directory:
-- [src/data/README.md](src/data/README.md)
-- [src/eda/README.md](src/eda/README.md)
-- [src/models/README.md](src/models/README.md)
-- [src/analysis/README.md](src/analysis/README.md)
-
----
-
-## 📈 Data Sources
-
-### Brent Oil Prices
-- **File**: `data/raw/BrentOilPrices.csv`
-- **Period**: May 20, 1987 - September 30, 2022
-- **Frequency**: Daily
-- **Source**: U.S. Energy Information Administration (EIA)
-- **Format**: CSV with columns: Date, Price
-
-### Event Data
-- **File**: `data/events.csv`
-- **Events**: 17 major geopolitical events, OPEC decisions, and economic shocks
-- **Period**: 1990-2022
-- **Format**: CSV with columns: date, event_name, event_type, description, expected_impact
-
-**Event Types:**
-- `geopolitical`: Wars, conflicts, political instability
-- `opec_decision`: Production quotas, policy changes
-- `economic_shock`: Financial crises, disasters
-- `sanction`: Trade restrictions, embargoes
-
-**Sample Events:**
-- Iraq Invasion of Kuwait (1990)
-- Asian Financial Crisis (1997)
-- 9/11 Attacks (2001)
-- Global Financial Crisis (2008)
-- Arab Spring (2010)
-- COVID-19 Pandemic (2020)
-- Russia Invades Ukraine (2022)
-
----
 
 ## 📚 Documentation
 
 ### Core Documentation
-- **[Project Overview](docs/project-overview.md)**: Business objectives and scope
-- **[Analysis Workflow](docs/analysis_workflow.md)**: Detailed step-by-step analysis guide (481 lines)
-- **[Assumptions & Limitations](docs/assumptions_and_limitations.md)**: Critical assumptions and methodological constraints (412 lines)
-- **[Model Outputs & Limitations](docs/public/model_outputs_and_limitations.md)**: Non-technical guide explaining expected results and limitations
-- **[Communication Channels](docs/communication_channels.md)**: Guide for presenting results to stakeholders
-- **[Steps](docs/steps.md)**: Task tracking and project milestones
 
-### Evaluation Criteria
-- **[Interim Code Evaluation](docs/interim-code-eval.md)**: Criteria for interim submission
-- **[Final Code Evaluation](docs/final-code-eval.md)**: Criteria for final submission
+- **[Analysis Workflow](docs/public/analysis_workflow.md)** - Step-by-step analysis process
+- **[Assumptions & Limitations](docs/public/assumptions_and_limitations.md)** - Project constraints
+- **[Model Outputs & Limitations](docs/public/model_outputs_and_limitations.md)** - Model capabilities
 
 ### Technical Documentation
-- All classes and functions have comprehensive docstrings
-- Type hints throughout codebase
-- Module-level README files in `src/` subdirectories
 
----
+- **[Backend API README](dashboard/backend/README.md)** - API documentation and setup
+- **[Frontend README](dashboard/frontend/README.md)** - Dashboard setup and features
+- **[Project Steps](docs/steps.md)** - Implementation progress tracker
+
+### Notebooks
+
+- **[01_exploratory_data_analysis.ipynb](notebooks/01_exploratory_data_analysis.ipynb)** - EDA, stationarity tests, volatility
+- **[02_bayesian_changepoint_modeling.ipynb](notebooks/02_bayesian_changepoint_modeling.ipynb)** - Bayesian modeling, MCMC, results
+
+## 🔬 Methodology
+
+### 1. Data Preparation
+
+- Load and validate Brent oil price data (9,154 records)
+- Calculate log returns for stationarity
+- Test for stationarity using ADF and KPSS tests
+- Analyze volatility patterns
+
+### 2. Bayesian Change Point Modeling
+
+Using **PyMC**, we built a single change point model:
+
+```python
+# Prior: Change point location (uniform distribution)
+τ ~ DiscreteUniform(0, T)
+
+# Parameters: Before and after means
+μ₁, μ₂ ~ Normal(μ_prior, σ_prior)
+
+# Likelihood: Price observations
+y ~ Normal(μ(t), σ)
+```
+
+Where `μ(t) = μ₁ if t < τ else μ₂`
+
+### 3. MCMC Sampling
+
+- **Sampler:** NUTS (No-U-Turn Sampler)
+- **Chains:** 4
+- **Draws:** 2,000
+- **Tuning:** 1,000
+- **Convergence:** R-hat < 1.01 for all parameters
+
+### 4. Change Point Identification
+
+- Analyze posterior distribution of τ
+- Extract highest probability change point
+- Calculate confidence level
+- Associate with nearby events (±60 days)
+
+### 5. Impact Quantification
+
+- Calculate before/after price statistics
+- Compute absolute and percentage changes
+- Analyze volatility shifts
+- Generate impact statements
+
+## 🖥️ Dashboard Features
+
+### Main Dashboard (/)
+
+- Overview stats cards (date range, change points, events, API health)
+- Interactive price chart with Recharts
+- Date range filtering
+- Event type filtering
+- Toggle change point and event markers
+- Change point cards with confidence
+- Event preview cards
+
+### Detailed Analysis (/analysis)
+
+- Select change point for deep dive
+- Before/after statistics comparison
+- Price trend chart with 90-day window
+- Related events within 60 days
+- Quantitative impact statement
+
+### Event Explorer (/events)
+
+- Browse all 17 historical events
+- Full-text search across names and descriptions
+- Filter by event type
+- Sort by date or name
+- Event cards with detailed information
+
+### About (/about)
+
+- Project overview and business context
+- Bayesian methodology explanation
+- Data sources and quality
+- Technology stack details
+- Assumptions and limitations
 
 ## 🧪 Testing
 
-The project has **219+ unit tests** with comprehensive coverage.
-
 ### Run All Tests
+
 ```bash
 pytest tests/ -v
 ```
 
-### Run Specific Test Categories
+### Run Specific Module Tests
+
 ```bash
-pytest tests/test_data_loader.py          # Data loading tests
-pytest tests/test_bayesian_changepoint.py # Bayesian model tests
-pytest tests/test_changepoint_analyzer.py # Analysis tests
+pytest tests/test_bayesian_changepoint.py -v
+pytest tests/test_data_loader.py -v
+pytest tests/test_changepoint_analyzer.py -v
 ```
 
-### Coverage Report
+### Check Coverage
+
 ```bash
-pytest tests/ --cov=src --cov-report=html
-# Open htmlcov/index.html to view coverage
+pytest --cov=src tests/
 ```
 
-### Test Structure
-Tests mirror the `src/` structure and cover:
-- ✓ Valid input scenarios
-- ✓ Edge cases (empty data, missing values, etc.)
-- ✓ Error handling and validation
-- ✓ Integration workflows
+## 🛠️ Technology Stack
 
----
+### Data Analysis
 
-## 🎨 Dashboard
+- **Python 3.x** - Core language
+- **PyMC** - Bayesian modeling and MCMC sampling
+- **pandas** - Data manipulation
+- **numpy** - Numerical computing
+- **matplotlib** - Visualization
+- **seaborn** - Statistical visualization
+- **arviz** - Bayesian diagnostics
 
-An interactive web dashboard for exploring change points and events (Task 3).
+### Backend
 
-### Architecture
-- **Backend**: Flask + Flask-CORS + Flask-RESTful
-- **Frontend**: React + TypeScript + Vite + Tailwind CSS + shadcn/ui
-- **Charts**: Recharts
+- **Flask 3.0.0** - Web framework
+- **Flask-RESTful** - REST API
+- **Flask-CORS** - Cross-origin requests
+- **flask-swagger-ui** - API documentation
 
-### Running the Dashboard
+### Frontend
 
-**Backend:**
-```bash
-cd dashboard/backend
-pip install -r requirements.txt
-python app.py
-# API runs on http://localhost:5000
-```
+- **React 19.2.0** - UI framework
+- **TypeScript 5.9.3** - Type safety
+- **Vite 7.3.1** - Build tool
+- **Tailwind CSS 4.1.18** - Styling
+- **Recharts 3.7.0** - Charts
+- **React Router DOM 7.13.0** - Routing
+- **Axios 1.13.5** - HTTP client
 
-**Frontend:**
-```bash
-cd dashboard/frontend
-npm install
-npm run dev
-# App runs on http://localhost:5173
-```
+### Development Tools
 
-**Features:**
-- Interactive price charts with change points
-- Event timeline and filtering
-- Impact quantification display
-- Responsive design (desktop, tablet, mobile)
+- **pytest** - Python testing
+- **Git** - Version control
+- **pnpm** - Package manager
 
----
+## 📈 Results
+
+### Change Point Detection
+
+**Change Point Date:** 2008-07-14  
+**Detection Confidence:** 94%
+
+**Price Impact:**
+- **Before (90 days):** $68.45 average
+- **After (90 days):** $51.23 average
+- **Absolute Change:** -$17.22
+- **Percentage Change:** -25.16%
+
+**Related Event:** 2008 Financial Crisis (September 15, 2008)
+
+### Statistical Validation
+
+- **ADF Test:** p-value < 0.05 (stationary after differencing)
+- **KPSS Test:** p-value > 0.05 (stationary)
+- **R-hat Values:** < 1.01 (excellent convergence)
+- **Effective Sample Size:** > 4,000 (reliable estimates)
+
+## 🎯 Business Impact
+
+### For Investors
+
+- **Risk Assessment:** Identify periods of high volatility around major events
+- **Portfolio Strategy:** Historical patterns inform hedging decisions
+- **Market Timing:** Anticipate price movements based on event types
+
+### For Policy Makers
+
+- **Impact Evaluation:** Quantify effects of geopolitical decisions
+- **Strategic Planning:** Understand oil market sensitivities
+- **Economic Forecasting:** Model price scenarios
+
+### For Energy Companies
+
+- **Operational Planning:** Adjust production based on market forecasts
+- **Price Negotiation:** Data-driven contract pricing
+- **Market Intelligence:** Track event-driven price changes
+
+## ⚠️ Assumptions & Limitations
+
+### Assumptions
+
+1. **Data Quality:** Historical price data is accurate and complete
+2. **Event Dating:** Event dates represent actual market impact timing
+3. **Single Change Point:** Model assumes one major structural break
+4. **Normal Distribution:** Price returns follow normal distribution
+
+### Limitations
+
+1. **Correlation ≠ Causation:** Analysis shows temporal correlations, not definitive causal relationships
+2. **Model Simplicity:** Single change point model may miss complex multi-phase shifts
+3. **Event Attribution:** Multiple factors often influence prices simultaneously
+4. **Temporal Window:** Fixed 60-day window may miss delayed or anticipatory effects
 
 ## 🤝 Contributing
 
 ### Code Quality Standards
 
-1. **Modularity**: Use OOP with clear class responsibilities
-2. **Documentation**: Comprehensive docstrings for all classes and methods
-3. **Testing**: Write tests for all new functionality
-4. **Type Hints**: Use type annotations for function signatures
-5. **Error Handling**: Graceful handling with informative error messages
-6. **Style**: Follow PEP 8 guidelines
+- **Modularity:** Use classes and single-responsibility modules
+- **Documentation:** Comprehensive docstrings for all functions/classes
+- **Type Hints:** Use Python type hints and TypeScript types
+- **Testing:** Unit tests for all new features
+- **Git Commits:** Meaningful commit messages
 
 ### Development Workflow
 
-1. Create a feature branch: `git checkout -b feature/your-feature`
-2. Make changes with clear, focused commits
-3. Add tests for new functionality
-4. Ensure all tests pass: `pytest tests/`
-5. Update documentation as needed
-6. Submit a pull request
+1. Create a feature branch
+2. Implement changes with tests
+3. Update documentation
+4. Submit pull request
+5. Code review and merge
 
----
+## 📝 License
 
-## 🙏 Acknowledgments
+This project was developed for Birhan Energies as part of the 10 Academy Week 10 challenge.
 
-- **Client**: Birhan Energies
-- **Data Source**: U.S. Energy Information Administration (EIA)
-- **Methodology**: Bayesian change point detection using PyMC
-- **Evaluation Framework**: 10 Academy curriculum guidelines
+## 👥 Authors
 
----
-
-## 📄 License
-
-This project is developed as part of an academic/consulting engagement for Birhan Energies.
-
----
+10 Academy Students - Week 10 Challenge
 
 ## 📧 Contact
 
 For questions or support:
-- Check [docs/](docs/) for detailed documentation
-- Review [assumptions_and_limitations.md](docs/assumptions_and_limitations.md) for methodology constraints
-- See [communication_channels.md](docs/communication_channels.md) for stakeholder communication guidelines
+- Review the documentation in `/docs`
+- Check the About page in the dashboard
+- Consult the API documentation at `/api/docs`
+
+## 🙏 Acknowledgments
+
+- **Birhan Energies** for project sponsorship and business context
+- **10 Academy** for training and mentorship
+- **Energy Data Sources** for historical price data
+- **Open Source Community** for excellent tools (PyMC, Flask, React)
 
 ---
 
-**Last Updated**: February 8, 2026  
-**Version**: 1.0  
-**Status**: Interim Submission Complete
+**Dashboard:** http://localhost:5173  
+**API:** http://localhost:5000  
+**Documentation:** http://localhost:5000/api/docs
+
+**© 2026 Brent Oil Change Point Analysis Project**
