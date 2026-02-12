@@ -1,73 +1,147 @@
-# React + TypeScript + Vite
+# Brent Oil Change Point Analysis - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript + Vite dashboard for visualizing Brent oil price change points and the impact of major geopolitical and economic events.
 
-Currently, two official plugins are available:
+## 🚀 Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+# Install dependencies
+pnpm install
 
-## React Compiler
+# Start development server
+pnpm run dev
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Build for production
+pnpm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📦 Tech Stack
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Framework:** React 19 + TypeScript  
+- **Build Tool:** Vite 7
+- **Styling:** Tailwind CSS 4
+- **Charts:** Recharts
+- **HTTP Client:** Axios
+- **Routing:** React Router DOM (planned)
+- **Icons:** Lucide React
+- **Date Utils:** date-fns
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 📁 Project Structure
+
 ```
+src/
+├── components/ui/      # Reusable UI components
+├── config/            # Configuration & constants
+├── hooks/             # Custom React hooks
+├── lib/               # Utility libraries
+├── services/          # API service layer
+├── types/             # TypeScript definitions
+├── App.tsx           # Main component
+└── main.tsx          # Entry point
+```
+
+## ✅ Currently Implemented
+
+- **API Integration** - Full REST API client with error handling
+- **Type Safety** - Complete TypeScript coverage
+- **Custom Hooks** - Reusable data fetching (`useQuery`, `useLazyQuery`)
+- **UI Components** - Card, LoadingSpinner, ErrorDisplay
+- **Dashboard Overview** - Stats cards for data range, change points, events
+- **Health Check** - API connection status indicator
+- **Responsive Design** - Mobile-friendly Tailwind layout
+- **Change Point Display** - Detected change points with confidence
+- **Event Cards** - Major events with type badges
+
+## 🔜 Coming Next
+
+- Interactive charts with Recharts
+- Date range filters
+- Event impact visualizations
+- Multi-page routing
+- Advanced filtering options
+- Export features (CSV/PNG)
+
+## 🔌 API Endpoints
+
+### Price Data
+- `GET /api/prices` - Historical prices
+- `GET /api/prices/statistics` - Statistics
+- `GET /api/prices/date-range` - Date range
+- `GET /api/prices/info` - Metadata
+
+### Change Points
+- `GET /api/changepoints` - All change points
+- `GET /api/changepoints/:id` - Specific change point
+- `GET /api/changepoints/stats` - Statistics
+
+### Events
+- `GET /api/events` - All events
+- `GET /api/events/:id` - Specific event
+- `GET /api/events/:id/impact` - Impact analysis
+- `GET /api/events/types` - Event types
+- `GET /api/events/stats` - Statistics
+
+## 🪝 Custom Hooks
+
+```tsx
+// Generic data fetching
+const { data, loading, error, refetch } = useQuery(
+  () => fetchPrices('2020-01-01', '2020-12-31'),
+  ['2020-01-01', '2020-12-31']
+);
+
+// Specific hooks
+const { data: prices } = usePrices(startDate, endDate);
+const { data: changePoints } = useChangePoints(minConfidence);
+const { data: events } = useEvents(eventType);
+```
+
+## 🎨 UI Components
+
+```tsx
+<Card title="My Title">
+  <p>Content</p>
+</Card>
+
+<LoadingSpinner size="md" />
+
+<ErrorDisplay error="Error message" onRetry={refetch} />
+```
+
+## ⚙️ Environment Variables
+
+Create a `.env` file:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000
+```
+
+## 🐛 Troubleshooting
+
+**API Connection Issues:**
+```bash
+# Check backend health
+curl http://localhost:5000/health
+
+# Verify .env configuration
+cat .env
+```
+
+**Build Errors:**
+```bash
+# Clear and reinstall
+rm -rf node_modules pnpm-lock.yaml
+pnpm install
+```
+
+## 📸 Current Dashboard
+
+The dashboard displays:
+- **API Health Status** - Real-time connection indicator
+- **Stats Grid** - Data range (1987-2022), 1 change point, 17 events
+- **Change Point Card** - 2008-07-14 detection with 94% confidence  
+- **Event Preview** - Major events like Gulf War, Financial Crisis, etc.
+
+## 📄 License
+
+Part of the Brent Oil Change Point Analysis project © 2026 Birhan Energies
