@@ -55,13 +55,14 @@ function App() {
 		error: pricesError,
 	} = usePrices(startDate || undefined, endDate || undefined);
 
-	// Initialize date range filters
+	// Initialize date range filters once when dateRange is available
 	useEffect(() => {
 		if (dateRange && !startDate && !endDate) {
 			setStartDate(dateRange.min_date);
 			setEndDate(dateRange.max_date);
 		}
-	}, [dateRange, startDate, endDate]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dateRange]); // Only depend on dateRange to avoid cascading renders
 
 	// Check API health on mount
 	useEffect(() => {
